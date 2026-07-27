@@ -1,95 +1,4 @@
-resource "grafana_rule_group" "ec2_alerts" {
-  name             = "EC2 Alerts"
-  folder_uid       = grafana_folder.llm_monitoring.uid
-  interval_seconds = 60
-  org_id           = 1
 
-  rule {
-    name           = "[llm]-[test]-[ec2]-[high]-[cpu]"
-    condition      = "B"
-    for            = "5m"
-    exec_err_state = "Alerting"
-    no_data_state  = "NoData"
-
-    data {
-      ref_id = "A"
-      relative_time_range {
-        from = 300
-        to   = 0
-      }
-      datasource_uid = grafana_data_source.prometheus.uid
-      model = jsonencode({
-        expr  = "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)"
-        refId = "A"
-      })
-    }
-    data {
-      ref_id = "B"
-      relative_time_range {
-        from = 300
-        to   = 0
-      }
-      datasource_uid = "-100"
-      model = jsonencode({
-        conditions = [
-          {
-            evaluator = { params = [80], type = "gt" }
-            operator  = { type = "and" }
-            query     = { params = ["A"] }
-            reducer   = { params = [], type = "last" }
-            type      = "query"
-          }
-        ]
-        datasource = { type = "__expr__", uid = "-100" }
-        refId      = "B"
-        type       = "classic_conditions"
-      })
-    }
-  }
-
-  rule {
-    name           = "[llm]-[test]-[ec2]-[low]-[cpu]"
-    condition      = "B"
-    for            = "5m"
-    exec_err_state = "Alerting"
-    no_data_state  = "NoData"
-
-    data {
-      ref_id = "A"
-      relative_time_range {
-        from = 300
-        to   = 0
-      }
-      datasource_uid = grafana_data_source.prometheus.uid
-      model = jsonencode({
-        expr  = "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)"
-        refId = "A"
-      })
-    }
-    data {
-      ref_id = "B"
-      relative_time_range {
-        from = 300
-        to   = 0
-      }
-      datasource_uid = "-100"
-      model = jsonencode({
-        conditions = [
-          {
-            evaluator = { params = [10], type = "lt" }
-            operator  = { type = "and" }
-            query     = { params = ["A"] }
-            reducer   = { params = [], type = "last" }
-            type      = "query"
-          }
-        ]
-        datasource = { type = "__expr__", uid = "-100" }
-        refId      = "B"
-        type       = "classic_conditions"
-      })
-    }
-  }
-}
 
 resource "grafana_rule_group" "rds_alerts" {
   name             = "RDS Alerts"
@@ -333,7 +242,7 @@ resource "grafana_rule_group" "elb_alerts" {
       datasource_uid = grafana_data_source.cloudwatch.uid
       model = jsonencode({
         region     = "default"
-        namespace  = "AWS/NetworkELB"
+        namespace  = "AWS/ApplicationELB"
         metricName = "HealthyHostCount"
         dimensions = {
           LoadBalancer = var.ollama_lb_arn_suffix
