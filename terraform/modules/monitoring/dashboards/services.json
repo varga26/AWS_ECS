@@ -24,7 +24,7 @@
             "TargetGroup": "${ollama_target_group_arn_suffix}"
           },
           "metricName": "HealthyHostCount",
-          "namespace": "AWS/NetworkELB",
+          "namespace": "AWS/ApplicationELB",
           "period": "60",
           "region": "default",
           "statistic": "Average",

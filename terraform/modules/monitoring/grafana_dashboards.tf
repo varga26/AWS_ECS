@@ -46,15 +46,6 @@ resource "grafana_dashboard" "services" {
   depends_on = [grafana_data_source.cloudwatch]
 }
 
-resource "grafana_dashboard" "asg" {
-  folder = grafana_folder.llm_monitoring.id
-  config_json = templatefile("${path.module}/dashboards/asg.json", {
-    cloudwatch_uid = grafana_data_source.cloudwatch.uid
-    asg_name       = var.ollama_asg_name
-  })
-  depends_on = [grafana_data_source.cloudwatch]
-}
-
 resource "grafana_dashboard" "alb" {
   folder = grafana_folder.llm_monitoring.id
   config_json = templatefile("${path.module}/dashboards/alb.json", {
