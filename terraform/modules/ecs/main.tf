@@ -70,7 +70,6 @@ resource "aws_ecs_service" "ollama" {
   }
 }
 
-# --- OpenWebUI ---
 resource "aws_ecs_task_definition" "openwebui" {
   family                   = "openwebui"
   network_mode             = "awsvpc"
@@ -125,7 +124,6 @@ resource "aws_ecs_service" "openwebui" {
   }
 }
 
-# --- Prometheus ---
 resource "aws_ecs_task_definition" "prometheus" {
   family                   = "prometheus"
   network_mode             = "awsvpc"
@@ -197,7 +195,6 @@ resource "aws_ecs_service" "prometheus" {
   }
 }
 
-# --- Grafana ---
 resource "aws_ecs_task_definition" "grafana" {
   family                   = "grafana"
   network_mode             = "awsvpc"
