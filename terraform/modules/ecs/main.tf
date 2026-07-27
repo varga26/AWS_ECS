@@ -37,6 +37,9 @@ resource "aws_ecs_task_definition" "ollama" {
       hostPort      = 11434
       protocol      = "tcp"
     }]
+    environment = [
+      { name = "OLLAMA_HOST", value = "0.0.0.0" }
+    ]
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -148,6 +151,13 @@ resource "aws_ecs_task_definition" "prometheus" {
     name      = "prometheus"
     image     = var.prometheus_image
     essential = true
+    command = [
+      "--config.file=/etc/prometheus/prometheus.yml",
+      "--storage.tsdb.path=/prometheus",
+      "--web.console.libraries=/usr/share/prometheus/console_libraries",
+      "--web.console.templates=/usr/share/prometheus/consoles",
+      "--web.external-url=/prometheus/"
+    ]
     portMappings = [{
       containerPort = 9090
       hostPort      = 9090

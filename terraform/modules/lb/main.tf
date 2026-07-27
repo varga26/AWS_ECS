@@ -25,7 +25,7 @@ resource "aws_lb_target_group" "grafana_tg" {
   vpc_id      = var.vpc_id
   target_type = "ip"
   health_check {
-    path = "/api/health"
+    path = "/grafana/api/health"
   }
 }
 
@@ -36,7 +36,7 @@ resource "aws_lb_target_group" "prometheus_tg" {
   vpc_id      = var.vpc_id
   target_type = "ip"
   health_check {
-    path = "/-/healthy"
+    path = "/prometheus/-/healthy"
   }
 }
 
