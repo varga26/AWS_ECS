@@ -15,3 +15,19 @@ variable "openwebui_image" { type = string }
 variable "prometheus_image" { type = string }
 variable "grafana_image" { type = string }
 variable "ollama_base_url" { type = string }
+
+variable "ollama_cpu" { type = string }
+variable "ollama_memory" { type = string }
+variable "ollama_desired_count" { type = number }
+
+variable "openwebui_cpu" { type = string }
+variable "openwebui_memory" { type = string }
+variable "openwebui_desired_count" { type = number }
+
+variable "prometheus_cpu" { type = string }
+variable "prometheus_memory" { type = string }
+variable "prometheus_desired_count" { type = number }
+
+variable "grafana_cpu" { type = string }
+variable "grafana_memory" { type = string }
+variable "grafana_desired_count" { type = number }

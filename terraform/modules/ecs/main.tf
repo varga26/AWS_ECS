@@ -18,13 +18,12 @@ resource "aws_cloudwatch_log_group" "ecs_logs" {
   retention_in_days = 14
 }
 
-# --- Ollama ---
 resource "aws_ecs_task_definition" "ollama" {
   family                   = "ollama"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "4096"
-  memory                   = "16384"
+  cpu                      = var.ollama_cpu
+  memory                   = var.ollama_memory
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
@@ -55,7 +54,7 @@ resource "aws_ecs_service" "ollama" {
   name            = "ollama-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.ollama.arn
-  desired_count   = 2
+  desired_count   = var.ollama_desired_count
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -74,8 +73,8 @@ resource "aws_ecs_task_definition" "openwebui" {
   family                   = "openwebui"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "1024"
-  memory                   = "2048"
+  cpu                      = var.openwebui_cpu
+  memory                   = var.openwebui_memory
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
@@ -109,7 +108,7 @@ resource "aws_ecs_service" "openwebui" {
   name            = "openwebui-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.openwebui.arn
-  desired_count   = 2
+  desired_count   = var.openwebui_desired_count
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -128,8 +127,8 @@ resource "aws_ecs_task_definition" "prometheus" {
   family                   = "prometheus"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "1024"
-  memory                   = "2048"
+  cpu                      = var.prometheus_cpu
+  memory                   = var.prometheus_memory
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
@@ -180,7 +179,7 @@ resource "aws_ecs_service" "prometheus" {
   name            = "prometheus-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.prometheus.arn
-  desired_count   = 1
+  desired_count   = var.prometheus_desired_count
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -199,8 +198,8 @@ resource "aws_ecs_task_definition" "grafana" {
   family                   = "grafana"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "512"
-  memory                   = "1024"
+  cpu                      = var.grafana_cpu
+  memory                   = var.grafana_memory
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
@@ -232,7 +231,7 @@ resource "aws_ecs_service" "grafana" {
   name            = "grafana-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.grafana.arn
-  desired_count   = 1
+  desired_count   = var.grafana_desired_count
   launch_type     = "FARGATE"
 
   network_configuration {

@@ -78,3 +78,28 @@ variable "pagerduty_integration_key" {
   default     = ""
   sensitive   = true
 }
+
+# --- Network Subnet CIDRs ---
+variable "private_subnet_1_az_cidr" { default = "10.0.0.0/27" }
+variable "private_subnet_2_az_cidr" { default = "10.0.0.32/27" }
+variable "private_subnet_1_rds_cidr" { default = "10.0.0.64/27" }
+variable "private_subnet_2_rds_cidr" { default = "10.0.0.96/27" }
+variable "public_subnet_1_cidr" { default = "10.0.0.128/27" }
+variable "public_subnet_2_cidr" { default = "10.0.0.160/27" }
+
+# --- ECS Service Parameters ---
+variable "ollama_cpu" { default = "4096" }
+variable "ollama_memory" { default = "16384" }
+variable "ollama_desired_count" { default = 2 }
+
+variable "openwebui_cpu" { default = "1024" }
+variable "openwebui_memory" { default = "2048" }
+variable "openwebui_desired_count" { default = 2 }
+
+variable "prometheus_cpu" { default = "1024" }
+variable "prometheus_memory" { default = "2048" }
+variable "prometheus_desired_count" { default = 1 }
+
+variable "grafana_cpu" { default = "512" }
+variable "grafana_memory" { default = "1024" }
+variable "grafana_desired_count" { default = 1 }

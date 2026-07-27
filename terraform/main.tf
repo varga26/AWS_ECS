@@ -1,6 +1,12 @@
 module "network" {
-  source   = "./modules/network"
-  vpc_cidr = var.vpc_cidr
+  source                    = "./modules/network"
+  vpc_cidr                  = var.vpc_cidr
+  private_subnet_1_az_cidr  = var.private_subnet_1_az_cidr
+  private_subnet_2_az_cidr  = var.private_subnet_2_az_cidr
+  private_subnet_1_rds_cidr = var.private_subnet_1_rds_cidr
+  private_subnet_2_rds_cidr = var.private_subnet_2_rds_cidr
+  public_subnet_1_cidr      = var.public_subnet_1_cidr
+  public_subnet_2_cidr      = var.public_subnet_2_cidr
 }
 
 module "security" {
@@ -65,6 +71,19 @@ module "ecs" {
   openwebui_image  = "${module.ecr.openwebui_repository_url}:latest"
   prometheus_image = "${module.ecr.prometheus_repository_url}:latest"
   grafana_image    = "${module.ecr.grafana_repository_url}:latest"
+
+  ollama_cpu              = var.ollama_cpu
+  ollama_memory           = var.ollama_memory
+  ollama_desired_count    = var.ollama_desired_count
+  openwebui_cpu           = var.openwebui_cpu
+  openwebui_memory        = var.openwebui_memory
+  openwebui_desired_count = var.openwebui_desired_count
+  prometheus_cpu          = var.prometheus_cpu
+  prometheus_memory       = var.prometheus_memory
+  prometheus_desired_count = var.prometheus_desired_count
+  grafana_cpu             = var.grafana_cpu
+  grafana_memory          = var.grafana_memory
+  grafana_desired_count   = var.grafana_desired_count
 }
 
 module "sns" {
