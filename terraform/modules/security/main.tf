@@ -14,6 +14,14 @@ resource "aws_security_group" "lb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 11434
+    to_port     = 11434
+    protocol    = "tcp"
+    cidr_blocks = [data.aws_vpc.selected.cidr_block]
+    description = "Internal ALB for Ollama"
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -41,6 +49,22 @@ resource "aws_security_group" "ecs_sg" {
     protocol        = "tcp"
     security_groups = [aws_security_group.lb_sg.id]
     description     = "Grafana from ALB"
+  }
+
+  ingress {
+    from_port       = 9090
+    to_port         = 9090
+    protocol        = "tcp"
+    security_groups = [aws_security_group.lb_sg.id]
+    description     = "Prometheus from ALB"
+  }
+
+  ingress {
+    from_port       = 11434
+    to_port         = 11434
+    protocol        = "tcp"
+    security_groups = [aws_security_group.lb_sg.id]
+    description     = "Ollama from ALB"
   }
 
   ingress {
