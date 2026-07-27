@@ -55,7 +55,30 @@ resource "aws_iam_role_policy" "ecs_task_policy" {
           "kms:Decrypt"
         ]
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeInstances",
+          "ec2:DescribeNetworkInterfaces",
+          "ecs:DescribeClusters",
+          "ecs:DescribeContainerInstances",
+          "ecs:DescribeServices",
+          "ecs:DescribeTaskDefinition",
+          "ecs:DescribeTasks",
+          "ecs:ListClusters",
+          "ecs:ListContainerInstances",
+          "ecs:ListServices",
+          "ecs:ListTaskDefinitions",
+          "ecs:ListTasks"
+        ]
+        Resource = "*"
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_cloudwatch" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"
 }
