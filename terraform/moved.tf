@@ -1,6 +1,4 @@
-# State migration from root to monitoring module
 
-# CloudWatch Modules
 moved {
   from = module.cw_ollama
   to   = module.monitoring.module.cw_ollama
