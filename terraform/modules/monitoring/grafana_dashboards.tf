@@ -1,6 +1,6 @@
 resource "null_resource" "wait_for_grafana" {
   provisioner "local-exec" {
-    command = "for i in {1..30}; do curl -s --connect-timeout 2 http://${var.alb_dns_name}:3000/api/health && break || sleep 10; done"
+    command = "for i in {1..30}; do curl -s --connect-timeout 2 http://${var.alb_dns_name}/grafana/api/health && break || sleep 10; done"
   }
 }
 

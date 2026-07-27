@@ -17,6 +17,6 @@ provider "aws" {
 }
 
 provider "grafana" {
-  url  = "http://${module.lb.alb_dns_name}:3000"
+  url  = "http://${module.lb.alb_dns_name}/grafana/"
   auth = "admin:admin"
 }
