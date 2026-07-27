@@ -14,14 +14,6 @@ resource "aws_security_group" "lb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port   = 3000
-    to_port     = 3000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Grafana access"
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -30,29 +22,9 @@ resource "aws_security_group" "lb_sg" {
   }
 }
 
-resource "aws_security_group" "bastion_sg" {
-  name        = "bastion-security-group"
-  description = "Allow SSH access to the Bastion host"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_security_group" "asg_sg" {
-  name        = "asg-security-group"
-  description = "Security group for private LLM backend servers"
+resource "aws_security_group" "ecs_sg" {
+  name        = "ecs-security-group"
+  description = "Security group for ECS tasks"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -60,24 +32,23 @@ resource "aws_security_group" "asg_sg" {
     to_port         = 8080
     protocol        = "tcp"
     security_groups = [aws_security_group.lb_sg.id]
-    description     = "Open WebUI from the public ALB"
+    description     = "OpenWebUI from ALB"
   }
 
   ingress {
-    from_port   = 11434
-    to_port     = 11434
-    protocol    = "tcp"
-    self        = true
-    cidr_blocks = [data.aws_vpc.selected.cidr_block]
-    description = "Ollama API from same ASG and NLB health checks"
-  }
-
-  ingress {
-    from_port       = 22
-    to_port         = 22
+    from_port       = 3000
+    to_port         = 3000
     protocol        = "tcp"
-    security_groups = [aws_security_group.bastion_sg.id]
-    description     = "SSH from Bastion"
+    security_groups = [aws_security_group.lb_sg.id]
+    description     = "Grafana from ALB"
+  }
+
+  ingress {
+    from_port       = 0
+    to_port         = 65535
+    protocol        = "tcp"
+    self            = true
+    description     = "Intra-cluster communication"
   }
 
   egress {
@@ -97,7 +68,7 @@ resource "aws_security_group" "rds_sg" {
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    security_groups = [aws_security_group.asg_sg.id]
+    security_groups = [aws_security_group.ecs_sg.id]
   }
 
   egress {
@@ -108,33 +79,16 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
-resource "aws_security_group" "grafana_sg"{
-  name        = "grafana-security-group"
-  description = "Security group for Grafana and Prometheus"
+resource "aws_security_group" "efs_sg" {
+  name        = "efs-security-group"
+  description = "Security group for EFS"
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port       = 3000
-    to_port         = 3000
+    from_port       = 2049
+    to_port         = 2049
     protocol        = "tcp"
-    security_groups = [aws_security_group.lb_sg.id]
-    description     = "Grafana from public ALB"
-  }
-
-  ingress {
-    from_port       = 9090
-    to_port         = 9090
-    protocol        = "tcp"
-    security_groups = [aws_security_group.asg_sg.id]
-    description     = "Prometheus remote write from Alloy"
-  }
-
-  ingress {
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    security_groups = [aws_security_group.bastion_sg.id]
-    description     = "SSH from Bastion"
+    security_groups = [aws_security_group.ecs_sg.id]
   }
 
   egress {

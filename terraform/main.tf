@@ -30,35 +30,41 @@ module "lb" {
   private_subnet_1_id = module.network.private_subnet_1_az_id
   private_subnet_2_id = module.network.private_subnet_2_az_id
   vpc_id              = module.network.vpc_id
-  grafana_instance_id = module.vm.grafana_instance_id
 }
 
-module "vm" {
-  source                = "./modules/vm"
-  public_subnet_1_id    = module.network.public_subnet_1_id
-  private_subnet_1_id   = module.network.private_subnet_1_az_id
-  bastion_sg_id         = module.security.bastion_sg_id
-  grafana_sg_id         = module.security.grafana_sg_id
-  key_pair_name         = module.asg.ollama_key_pair_name
-  bastion_ami           = var.bastion_ami
-  bastion_instance_type = var.bastion_instance_type
-  grafana_instance_type = var.grafana_instance_type
+module "ecr" {
+  source = "./modules/ecr"
 }
 
-module "asg" {
-  source                  = "./modules/asg"
-  public_key              = file("${path.module}/../new-aws-key.pem.pub")
-  grafana_private_ip      = module.vm.grafana_private_ip
-  asg_sg_id               = module.security.asg_sg_id
-  private_subnet_1_az_id  = module.network.private_subnet_1_az_id
-  private_subnet_2_az_id  = module.network.private_subnet_2_az_id
-  target_group_arn        = module.lb.target_group_arn
-  ollama_target_group_arn = module.lb.ollama_target_group_arn
-  ollama_base_url         = module.lb.ollama_base_url
-  openwebui_database_url  = module.db.openwebui_database_url
-  ollama_instance_type    = var.ollama_instance_type
-  openwebui_instance_type = var.openwebui_instance_type
-  webui_secret_key        = var.webui_secret_key
+module "storage" {
+  source     = "./modules/storage"
+  subnet_ids = [module.network.private_subnet_1_az_id, module.network.private_subnet_2_az_id]
+  efs_sg_id  = module.security.efs_sg_id
+}
+
+module "ecs" {
+  source = "./modules/ecs"
+  vpc_id = module.network.vpc_id
+  private_subnet_ids = [module.network.private_subnet_1_az_id, module.network.private_subnet_2_az_id]
+  ecs_sg_id = module.security.ecs_sg_id
+  
+  openwebui_tg_arn  = module.lb.openwebui_target_group_arn
+  grafana_tg_arn    = module.lb.grafana_target_group_arn
+  prometheus_tg_arn = module.lb.prometheus_target_group_arn
+  ollama_tg_arn     = module.lb.ollama_target_group_arn
+  ollama_base_url   = module.lb.ollama_base_url
+  
+  efs_id    = module.storage.efs_id
+  efs_ap_id = module.storage.efs_access_point_id
+  
+  database_url     = module.db.openwebui_database_url
+  webui_secret_key = var.webui_secret_key
+  aws_region       = var.aws_region
+  
+  ollama_image     = "${module.ecr.ollama_repository_url}:latest"
+  openwebui_image  = "${module.ecr.openwebui_repository_url}:latest"
+  prometheus_image = "${module.ecr.prometheus_repository_url}:latest"
+  grafana_image    = "${module.ecr.grafana_repository_url}:latest"
 }
 
 module "sns" {
@@ -67,7 +73,6 @@ module "sns" {
   endpoint = var.endpoint
 }
 
-
 module "monitoring" {
   source = "./modules/monitoring"
 
@@ -75,13 +80,14 @@ module "monitoring" {
   sns_topic_arn                  = module.sns.sns_topic_arn
   alb_dns_name                   = module.lb.alb_dns_name
   alb_arn_suffix                 = module.lb.alb_arn_suffix
-  target_group_arn_suffix        = module.lb.target_group_arn_suffix
+  target_group_arn_suffix        = module.lb.openwebui_target_group_arn_suffix
   ollama_lb_arn_suffix           = module.lb.ollama_lb_arn_suffix
   ollama_target_group_arn_suffix = module.lb.ollama_target_group_arn_suffix
-  ollama_asg_name                = module.asg.ollama_asg_name
+  ecs_cluster_name               = module.ecs.cluster_name
+  ollama_service_name            = module.ecs.ollama_service_name
+  openwebui_service_name         = module.ecs.openwebui_service_name
   rds_identifier                 = module.db.rds_identifier
   endpoint                       = var.endpoint
   slack_webhook_url              = var.slack_webhook_url
   pagerduty_integration_key      = var.pagerduty_integration_key
 }
-

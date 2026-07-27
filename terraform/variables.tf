@@ -13,16 +13,6 @@ variable "vpc_cidr" {
   default = "10.0.0.0/24"
 }
 
-variable "bastion_ami" {
-  type    = string
-  default = "ami-0886a1a9991170db6"
-}
-
-variable "bastion_instance_type" {
-  type    = string
-  default = "t3.micro"
-}
-
 variable "db_allocated_storage" {
   type    = number
   default = 20
@@ -48,16 +38,6 @@ variable "db_parameter_group_name" {
   default = "default.postgres16"
 }
 
-variable "ollama_instance_type" {
-  type    = string
-  default = "t3.micro"
-}
-
-variable "openwebui_instance_type" {
-  type    = string
-  default = "t3.micro"
-}
-
 variable "webui_secret_key" {
   type        = string
   description = "Secret key for OpenWebUI web interface"
@@ -75,16 +55,11 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "grafana_instance_type" {
-  type        = string
-  description = "EC2 instance type for Grafana"
-  default     = "t3.micro"
-}
-
 variable "endpoint" {
   type        = string
   description = "Email address for receiving CloudWatch alarms"
 }
+
 variable "protocol" {
   type    = string
   default = "email"
@@ -103,6 +78,3 @@ variable "pagerduty_integration_key" {
   default     = ""
   sensitive   = true
 }
-
-
-
