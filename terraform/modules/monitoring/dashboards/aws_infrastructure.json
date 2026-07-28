@@ -18,7 +18,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         }
       ]
     },
@@ -36,7 +36,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         }
       ]
     },
@@ -54,7 +54,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         }
       ]
     },
@@ -72,7 +72,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         },
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
@@ -83,7 +83,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "B",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         }
       ]
     },
@@ -101,7 +101,7 @@
           "region": "default",
           "statistic": "Sum",
           "refId": "A",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         },
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
@@ -112,7 +112,7 @@
           "region": "default",
           "statistic": "Sum",
           "refId": "B",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         }
       ]
     },
@@ -130,7 +130,7 @@
           "region": "default",
           "statistic": "Sum",
           "refId": "A",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         },
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
@@ -141,7 +141,7 @@
           "region": "default",
           "statistic": "Sum",
           "refId": "B",
-          "matchExact": true
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0
         }
       ]
     }

@@ -18,7 +18,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": true,
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
           "alias": "Ollama"
         },
         {
@@ -30,7 +30,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "B",
-          "matchExact": true,
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
           "alias": "OpenWebUI"
         },
         {
@@ -42,7 +42,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "C",
-          "matchExact": true,
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
           "alias": "Prometheus"
         },
         {
@@ -54,7 +54,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "D",
-          "matchExact": true,
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
           "alias": "Grafana"
         }
       ]
@@ -73,7 +73,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": true,
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
           "alias": "Ollama"
         },
         {
@@ -85,7 +85,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "B",
-          "matchExact": true,
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
           "alias": "OpenWebUI"
         },
         {
@@ -97,7 +97,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "C",
-          "matchExact": true,
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
           "alias": "Prometheus"
         },
         {
@@ -109,7 +109,7 @@
           "region": "default",
           "statistic": "Average",
           "refId": "D",
-          "matchExact": true,
+          "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
           "alias": "Grafana"
         }
       ]
