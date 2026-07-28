@@ -6,6 +6,12 @@ scrape_configs:
     ecs_sd_configs:
       - region: us-east-1
     relabel_configs:
-      - source_labels: [__meta_ecs_cluster_name]
+      - source_labels: [__meta_ecs_cluster]
         action: keep
         regex: llm-ecs-cluster
+      - source_labels: [__meta_ecs_service]
+        action: keep
+        regex: ollama-service
+      - source_labels: [__meta_ecs_ip_address]
+        target_label: __address__
+        replacement: "${1}:11434"
