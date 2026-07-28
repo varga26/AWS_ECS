@@ -43,7 +43,6 @@ jobs:
       - name: Terraform Apply ECR
         if: github.ref == 'refs/heads/main'
         working-directory: ./terraform
-        # ECR створюється автоматично, оскільки він потрібен для Docker Push
         run: terraform apply -target="module.ecr" -auto-approve -input=false
 
       - name: Login to Amazon ECR
@@ -64,7 +63,6 @@ jobs:
       - name: Terraform Plan
         if: github.ref == 'refs/heads/main'
         working-directory: ./terraform
-        # Зберігаємо план у файл tfplan
         run: terraform plan -out=tfplan -input=false
 
       - name: Upload Terraform Plan
