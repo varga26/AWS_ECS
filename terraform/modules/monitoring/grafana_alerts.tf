@@ -282,6 +282,172 @@ resource "grafana_rule_group" "elb_alerts" {
 }
 
 
+resource "grafana_rule_group" "container_alerts" {
+  name             = "Container Alerts"
+  folder_uid       = grafana_folder.llm_monitoring.uid
+  interval_seconds = 60
+  org_id           = 1
+
+  rule {
+    name           = "[llm]-[test]-[container]-[high]-[cpu]"
+    condition      = "B"
+    for            = "5m"
+    exec_err_state = "Alerting"
+    no_data_state  = "NoData"
+
+    data {
+      ref_id = "A"
+      relative_time_range {
+        from = 300
+        to   = 0
+      }
+      datasource_uid = grafana_data_source.cloudwatch.uid
+      model = jsonencode({
+        region     = "default"
+        namespace  = "AWS/ECS"
+        metricName = "CPUUtilization"
+        dimensions = {
+          ClusterName = var.ecs_cluster_name
+          ServiceName = var.ollama_service_name
+        }
+        statistic        = "Average"
+        period           = "300"
+        matchExact       = false
+        metricQueryType  = 0
+        metricEditorMode = 0
+        refId            = "A"
+      })
+    }
+    data {
+      ref_id = "B"
+      relative_time_range {
+        from = 300
+        to   = 0
+      }
+      datasource_uid = "-100"
+      model = jsonencode({
+        conditions = [
+          {
+            evaluator = { params = [85], type = "gt" }
+            operator  = { type = "and" }
+            query     = { params = ["A"] }
+            reducer   = { params = [], type = "last" }
+            type      = "query"
+          }
+        ]
+        datasource = { type = "__expr__", uid = "-100" }
+        refId      = "B"
+        type       = "classic_conditions"
+      })
+    }
+  }
+
+  rule {
+    name           = "[llm]-[test]-[container]-[high]-[memory]"
+    condition      = "B"
+    for            = "5m"
+    exec_err_state = "Alerting"
+    no_data_state  = "NoData"
+
+    data {
+      ref_id = "A"
+      relative_time_range {
+        from = 300
+        to   = 0
+      }
+      datasource_uid = grafana_data_source.cloudwatch.uid
+      model = jsonencode({
+        region     = "default"
+        namespace  = "AWS/ECS"
+        metricName = "MemoryUtilization"
+        dimensions = {
+          ClusterName = var.ecs_cluster_name
+          ServiceName = var.ollama_service_name
+        }
+        statistic        = "Average"
+        period           = "300"
+        matchExact       = false
+        metricQueryType  = 0
+        metricEditorMode = 0
+        refId            = "A"
+      })
+    }
+    data {
+      ref_id = "B"
+      relative_time_range {
+        from = 300
+        to   = 0
+      }
+      datasource_uid = "-100"
+      model = jsonencode({
+        conditions = [
+          {
+            evaluator = { params = [85], type = "gt" }
+            operator  = { type = "and" }
+            query     = { params = ["A"] }
+            reducer   = { params = [], type = "last" }
+            type      = "query"
+          }
+        ]
+        datasource = { type = "__expr__", uid = "-100" }
+        refId      = "B"
+        type       = "classic_conditions"
+      })
+    }
+  }
+}
+
+resource "grafana_rule_group" "llm_alerts" {
+  name             = "LLM Alerts"
+  folder_uid       = grafana_folder.llm_monitoring.uid
+  interval_seconds = 60
+  org_id           = 1
+
+  rule {
+    name           = "[llm]-[test]-[ollama]-[high]-[queue]"
+    condition      = "B"
+    for            = "5m"
+    exec_err_state = "Alerting"
+    no_data_state  = "NoData"
+
+    data {
+      ref_id = "A"
+      relative_time_range {
+        from = 300
+        to   = 0
+      }
+      datasource_uid = grafana_data_source.prometheus.uid
+      model = jsonencode({
+        expr  = "ollama_queue_size"
+        refId = "A"
+      })
+    }
+    data {
+      ref_id = "B"
+      relative_time_range {
+        from = 300
+        to   = 0
+      }
+      datasource_uid = "-100"
+      model = jsonencode({
+        conditions = [
+          {
+            evaluator = { params = [5], type = "gt" }
+            operator  = { type = "and" }
+            query     = { params = ["A"] }
+            reducer   = { params = [], type = "last" }
+            type      = "query"
+          }
+        ]
+        datasource = { type = "__expr__", uid = "-100" }
+        refId      = "B"
+        type       = "classic_conditions"
+      })
+    }
+  }
+}
+
+
 resource "grafana_message_template" "llm_alert" {
   name     = "llm-alert-template"
   template = <<-EOT
@@ -309,8 +475,6 @@ resource "grafana_message_template" "llm_alert" {
 
   depends_on = [null_resource.wait_for_grafana]
 }
-
-# ── Contact Points ────────────────────────────────────────────────────────────
 
 resource "grafana_contact_point" "email" {
   name = "Email"
@@ -381,7 +545,6 @@ resource "grafana_notification_policy" "main" {
     repeat_interval = "1h"
   }
 
-  # Slack
   dynamic "policy" {
     for_each = var.slack_webhook_url != "" ? [1] : []
     content {
@@ -399,7 +562,6 @@ resource "grafana_notification_policy" "main" {
     }
   }
 
-  # PagerDuty
   dynamic "policy" {
     for_each = var.pagerduty_integration_key != "" ? [1] : []
     content {

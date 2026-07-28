@@ -7,7 +7,7 @@ resource "null_resource" "wait_for_grafana" {
 resource "grafana_data_source" "prometheus" {
   type       = "prometheus"
   name       = "Prometheus"
-  url        = "http://localhost:9090"
+  url        = "http://${var.alb_dns_name}/prometheus"
   is_default = true
   depends_on = [null_resource.wait_for_grafana]
 }
@@ -48,4 +48,12 @@ resource "grafana_dashboard" "hosts" {
     ecs_cluster_name = var.ecs_cluster_name
   })
   depends_on = [grafana_data_source.cloudwatch]
+}
+
+resource "grafana_dashboard" "llm_performance" {
+  folder = grafana_folder.llm_monitoring.id
+  config_json = templatefile("${path.module}/dashboards/llm_performance.json", {
+    prometheus_uid = grafana_data_source.prometheus.uid
+  })
+  depends_on = [grafana_data_source.prometheus]
 }
