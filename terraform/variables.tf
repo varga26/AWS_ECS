@@ -87,7 +87,7 @@ variable "public_subnet_1_cidr" { default = "10.0.0.128/27" }
 variable "public_subnet_2_cidr" { default = "10.0.0.160/27" }
 
 variable "ollama_cpu" { default = "2048" }
-variable "ollama_memory" { default = "2048" }
+variable "ollama_memory" { default = "4096" }
 variable "ollama_desired_count" { default = 2 }
 
 variable "openwebui_cpu" { default = "1024" }
