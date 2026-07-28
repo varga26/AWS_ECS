@@ -1,54 +1,116 @@
 {
-  "title": "Host Statuses",
+  "title": "ECS Containers",
   "timezone": "browser",
   "schemaVersion": 39,
   "refresh": "5s",
   "panels": [
     {
       "type": "timeseries",
-      "title": "CPU Usage (%)",
+      "title": "CPU Utilization (%)",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
-          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
-          "legendFormat": "{{instance}}"
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "ollama-service" },
+          "metricName": "CPUUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": true,
+          "alias": "Ollama"
+        },
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "openwebui-service" },
+          "metricName": "CPUUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "B",
+          "matchExact": true,
+          "alias": "OpenWebUI"
+        },
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "prometheus-service" },
+          "metricName": "CPUUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "C",
+          "matchExact": true,
+          "alias": "Prometheus"
+        },
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "grafana-service" },
+          "metricName": "CPUUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "D",
+          "matchExact": true,
+          "alias": "Grafana"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Memory Usage (%)",
+      "title": "Memory Utilization (%)",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
-          "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
-          "legendFormat": "{{instance}}"
-        }
-      ]
-    },
-    {
-      "type": "timeseries",
-      "title": "Disk Space Usage (%)",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
-      "targets": [
-        {
-          "expr": "100 - ((node_filesystem_avail_bytes{fstype!~\"tmpfs|fuse.lxcfs|squashfs\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|fuse.lxcfs|squashfs\"}) * 100)",
-          "legendFormat": "{{instance}} - {{mountpoint}}"
-        }
-      ]
-    },
-    {
-      "type": "timeseries",
-      "title": "Network Traffic",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
-      "targets": [
-        {
-          "expr": "rate(node_network_receive_bytes_total{device!~\"lo\"}[5m])",
-          "legendFormat": "In - {{instance}}"
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "ollama-service" },
+          "metricName": "MemoryUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": true,
+          "alias": "Ollama"
         },
         {
-          "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\"}[5m])",
-          "legendFormat": "Out - {{instance}}"
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "openwebui-service" },
+          "metricName": "MemoryUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "B",
+          "matchExact": true,
+          "alias": "OpenWebUI"
+        },
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "prometheus-service" },
+          "metricName": "MemoryUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "C",
+          "matchExact": true,
+          "alias": "Prometheus"
+        },
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "grafana-service" },
+          "metricName": "MemoryUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "D",
+          "matchExact": true,
+          "alias": "Grafana"
         }
       ]
     }

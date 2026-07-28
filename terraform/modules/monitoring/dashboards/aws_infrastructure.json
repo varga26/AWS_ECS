@@ -6,187 +6,142 @@
   "panels": [
     {
       "type": "timeseries",
-      "title": "RDS CPU Utilization",
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 0
-      },
+      "title": "RDS CPU Utilization (%)",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
       "targets": [
         {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "${cloudwatch_uid}"
-          },
-          "dimensions": {
-            "DBInstanceIdentifier": "${rds_identifier}"
-          },
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "DBInstanceIdentifier": "${rds_identifier}" },
           "metricName": "CPUUtilization",
           "namespace": "AWS/RDS",
           "period": "300",
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": true,
-          "metricQueryType": 0,
-          "metricEditorMode": 0
+          "matchExact": true
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "RDS Freeable Memory (Bytes)",
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 0
-      },
+      "title": "RDS Freeable Memory",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
       "targets": [
         {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "${cloudwatch_uid}"
-          },
-          "dimensions": {
-            "DBInstanceIdentifier": "${rds_identifier}"
-          },
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "DBInstanceIdentifier": "${rds_identifier}" },
           "metricName": "FreeableMemory",
           "namespace": "AWS/RDS",
           "period": "300",
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": false,
-          "metricQueryType": 0,
-          "metricEditorMode": 0,
-          "id": "queryA"
+          "matchExact": true
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "RDS Free Storage Space (Bytes)",
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 0
-      },
+      "title": "RDS Free Storage Space",
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 0 },
       "targets": [
         {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "${cloudwatch_uid}"
-          },
-          "dimensions": {
-            "DBInstanceIdentifier": "${rds_identifier}"
-          },
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "DBInstanceIdentifier": "${rds_identifier}" },
           "metricName": "FreeStorageSpace",
           "namespace": "AWS/RDS",
           "period": "300",
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": false,
-          "metricQueryType": 0,
-          "metricEditorMode": 0,
-          "id": "queryA"
+          "matchExact": true
         }
       ]
     },
     {
-      "type": "stat",
-      "title": "ELB Healthy Host Count",
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 0,
-        "y": 8
-      },
+      "type": "timeseries",
+      "title": "ALB Healthy Host Count",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 6 },
       "targets": [
         {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "${cloudwatch_uid}"
-          },
-          "dimensions": {
-            "LoadBalancer": "${alb_arn_suffix}",
-            "TargetGroup": "${target_group_arn_suffix}"
-          },
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "LoadBalancer": "${alb_arn_suffix}", "TargetGroup": "${openwebui_target_group_arn_suffix}" },
           "metricName": "HealthyHostCount",
           "namespace": "AWS/ApplicationELB",
-          "period": "300",
+          "period": "60",
           "region": "default",
           "statistic": "Average",
           "refId": "A",
-          "matchExact": false,
-          "metricQueryType": 0,
-          "metricEditorMode": 0,
-          "id": "queryA"
+          "matchExact": true
+        },
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "LoadBalancer": "${ollama_lb_arn_suffix}", "TargetGroup": "${ollama_target_group_arn_suffix}" },
+          "metricName": "HealthyHostCount",
+          "namespace": "AWS/ApplicationELB",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "B",
+          "matchExact": true
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "ELB 4XX Errors",
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 8,
-        "y": 8
-      },
+      "title": "ALB Request Count",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 6 },
       "targets": [
         {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "${cloudwatch_uid}"
-          },
-          "dimensions": {
-            "LoadBalancer": "${alb_arn_suffix}"
-          },
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "LoadBalancer": "${alb_arn_suffix}" },
+          "metricName": "RequestCount",
+          "namespace": "AWS/ApplicationELB",
+          "period": "60",
+          "region": "default",
+          "statistic": "Sum",
+          "refId": "A",
+          "matchExact": true
+        },
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "LoadBalancer": "${ollama_lb_arn_suffix}" },
+          "metricName": "RequestCount",
+          "namespace": "AWS/ApplicationELB",
+          "period": "60",
+          "region": "default",
+          "statistic": "Sum",
+          "refId": "B",
+          "matchExact": true
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "ALB HTTP Errors",
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 6 },
+      "targets": [
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "LoadBalancer": "${alb_arn_suffix}" },
           "metricName": "HTTPCode_Target_4XX_Count",
           "namespace": "AWS/ApplicationELB",
-          "period": "300",
+          "period": "60",
           "region": "default",
           "statistic": "Sum",
           "refId": "A",
-          "matchExact": false,
-          "metricQueryType": 0,
-          "metricEditorMode": 0,
-          "id": "queryA"
-        }
-      ]
-    },
-    {
-      "type": "timeseries",
-      "title": "ELB 5XX Errors",
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 16,
-        "y": 8
-      },
-      "targets": [
+          "matchExact": true
+        },
         {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "${cloudwatch_uid}"
-          },
-          "dimensions": {
-            "LoadBalancer": "${alb_arn_suffix}"
-          },
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": { "LoadBalancer": "${alb_arn_suffix}" },
           "metricName": "HTTPCode_Target_5XX_Count",
           "namespace": "AWS/ApplicationELB",
-          "period": "300",
+          "period": "60",
           "region": "default",
           "statistic": "Sum",
-          "refId": "A",
-          "matchExact": false,
-          "metricQueryType": 0,
-          "metricEditorMode": 0,
-          "id": "queryA"
+          "refId": "B",
+          "matchExact": true
         }
       ]
     }

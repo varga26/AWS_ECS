@@ -28,10 +28,9 @@ resource "grafana_folder" "llm_monitoring" {
 }
 
 
-
-resource "grafana_dashboard" "services" {
+resource "grafana_dashboard" "aws_infrastructure" {
   folder = grafana_folder.llm_monitoring.id
-  config_json = templatefile("${path.module}/dashboards/services.json", {
+  config_json = templatefile("${path.module}/dashboards/aws_infrastructure.json", {
     cloudwatch_uid                    = grafana_data_source.cloudwatch.uid
     rds_identifier                    = var.rds_identifier
     alb_arn_suffix                    = var.alb_arn_suffix
@@ -42,24 +41,11 @@ resource "grafana_dashboard" "services" {
   depends_on = [grafana_data_source.cloudwatch]
 }
 
-resource "grafana_dashboard" "alb" {
+resource "grafana_dashboard" "hosts" {
   folder = grafana_folder.llm_monitoring.id
-  config_json = templatefile("${path.module}/dashboards/alb.json", {
-    cloudwatch_uid          = grafana_data_source.cloudwatch.uid
-    alb_arn_suffix          = var.alb_arn_suffix
-    target_group_arn_suffix = var.target_group_arn_suffix
+  config_json = templatefile("${path.module}/dashboards/hosts.json", {
+    cloudwatch_uid   = grafana_data_source.cloudwatch.uid
+    ecs_cluster_name = var.ecs_cluster_name
   })
   depends_on = [grafana_data_source.cloudwatch]
 }
-
-resource "grafana_dashboard" "rds" {
-  folder = grafana_folder.llm_monitoring.id
-  config_json = templatefile("${path.module}/dashboards/rds.json", {
-    cloudwatch_uid = grafana_data_source.cloudwatch.uid
-    rds_identifier = var.rds_identifier
-  })
-  depends_on = [grafana_data_source.cloudwatch]
-}
-
-
-
