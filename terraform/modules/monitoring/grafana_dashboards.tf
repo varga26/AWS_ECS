@@ -1,6 +1,6 @@
 resource "null_resource" "wait_for_grafana" {
   provisioner "local-exec" {
-    command = "for i in {1..30}; do curl -s --connect-timeout 2 http://${var.alb_dns_name}/grafana/api/health && break || sleep 10; done"
+    command = "for i in {1..45}; do if [ \"$(curl -s -o /dev/null -w '%%{http_code}' http://${var.alb_dns_name}/grafana/api/health)\" = \"200\" ]; then echo 'Grafana is ready!'; break; else echo 'Waiting for Grafana...'; sleep 10; fi; done"
   }
 }
 
@@ -27,11 +27,7 @@ resource "grafana_folder" "llm_monitoring" {
   depends_on = [null_resource.wait_for_grafana]
 }
 
-resource "grafana_dashboard" "hosts" {
-  folder      = grafana_folder.llm_monitoring.id
-  config_json = file("${path.module}/dashboards/hosts.json")
-  depends_on  = [grafana_data_source.prometheus]
-}
+
 
 resource "grafana_dashboard" "services" {
   folder = grafana_folder.llm_monitoring.id

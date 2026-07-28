@@ -76,7 +76,7 @@ jobs:
     name: "Manual Approval Apply"
     needs: plan_and_build
     runs-on: ubuntu-latest
-    environment: production 
+    environment: dev
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
