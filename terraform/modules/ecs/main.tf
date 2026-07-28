@@ -87,8 +87,8 @@ resource "aws_ecs_service" "ollama" {
 
   load_balancer {
     target_group_arn = var.ollama_tg_arn
-    container_name   = "ollama"
-    container_port   = 11434
+    container_name   = "ollama-metrics"
+    container_port   = 8080
   }
 }
 

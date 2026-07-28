@@ -42,7 +42,7 @@ resource "aws_lb_target_group" "prometheus_tg" {
 
 resource "aws_lb_target_group" "ollama_tg" {
   name        = "ollama-tg"
-  port        = 11434
+  port        = 8080
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
