@@ -27,27 +27,50 @@ resource "aws_ecs_task_definition" "ollama" {
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
-  container_definitions = jsonencode([{
-    name      = "ollama"
-    image     = var.ollama_image
-    essential = true
-    portMappings = [{
-      containerPort = 11434
-      hostPort      = 11434
-      protocol      = "tcp"
-    }]
-    environment = [
-      { name = "OLLAMA_HOST", value = "0.0.0.0" }
-    ]
-    logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
-        "awslogs-region"        = var.aws_region
-        "awslogs-stream-prefix" = "ollama"
+  container_definitions = jsonencode([
+    {
+      name      = "ollama"
+      image     = var.ollama_image
+      essential = true
+      portMappings = [{
+        containerPort = 11434
+        hostPort      = 11434
+        protocol      = "tcp"
+      }]
+      environment = [
+        { name = "OLLAMA_HOST", value = "0.0.0.0" }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "ollama"
+        }
+      }
+    },
+    {
+      name      = "ollama-metrics"
+      image     = "ghcr.io/norskhelsenett/ollama-metrics:latest"
+      essential = true
+      portMappings = [{
+        containerPort = 8080
+        hostPort      = 8080
+        protocol      = "tcp"
+      }]
+      environment = [
+        { name = "OLLAMA_HOST", value = "http://127.0.0.1:11434" }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "ollama-metrics"
+        }
       }
     }
-  }])
+  ])
 }
 
 resource "aws_ecs_service" "ollama" {

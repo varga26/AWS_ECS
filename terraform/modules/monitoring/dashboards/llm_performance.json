@@ -11,7 +11,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "rate(ollama_eval_count_total[1m])",
+          "expr": "rate(ollama_generated_tokens_total[1m])",
           "legendFormat": "{{model}} (Generation)",
           "refId": "A"
         }
@@ -24,7 +24,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "rate(ollama_prompt_eval_count_total[1m])",
+          "expr": "rate(ollama_prompt_tokens_total[1m])",
           "legendFormat": "{{model}} (Prompt Eval)",
           "refId": "A"
         }
@@ -32,26 +32,26 @@
     },
     {
       "type": "stat",
-      "title": "Active Request Queue",
+      "title": "Loaded Models",
       "gridPos": { "h": 6, "w": 8, "x": 0, "y": 8 },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "ollama_queue_size",
-          "legendFormat": "Requests in Queue",
+          "expr": "ollama_loaded_models",
+          "legendFormat": "Models Loaded",
           "refId": "A"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Model Load Duration (seconds)",
+      "title": "Request Duration (seconds)",
       "gridPos": { "h": 6, "w": 16, "x": 8, "y": 8 },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "rate(ollama_prompt_eval_duration_seconds_total[1m])",
-          "legendFormat": "{{model}} Eval Time",
+          "expr": "rate(ollama_request_duration_seconds_sum[1m]) / rate(ollama_request_duration_seconds_count[1m])",
+          "legendFormat": "{{model}} Avg Req Time",
           "refId": "A"
         }
       ]

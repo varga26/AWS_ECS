@@ -14,4 +14,4 @@ scrape_configs:
         regex: ollama-service
       - source_labels: [__meta_ecs_ip_address]
         target_label: __address__
-        replacement: "${1}:11434"
+        replacement: "${1}:8080"
