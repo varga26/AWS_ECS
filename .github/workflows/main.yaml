@@ -17,8 +17,8 @@ env:
   TF_VAR_endpoint: ${{ secrets.ENDPOINT }}
 
 jobs:
-  terraform_and_deploy:
-    name: "Build, Push & Deploy"
+  plan_and_build:
+    name: "Build, Push & Plan"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
@@ -28,12 +28,12 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.0
-     
+      
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Init
@@ -41,8 +41,9 @@ jobs:
         run: terraform init -backend-config="bucket=$BUCKET_TF_STATE"
  
       - name: Terraform Apply ECR
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main'
         working-directory: ./terraform
+        # ECR створюється автоматично, оскільки він потрібен для Docker Push
         run: terraform apply -target="module.ecr" -auto-approve -input=false
 
       - name: Login to Amazon ECR
@@ -50,7 +51,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and Push Docker Images
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main'
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
@@ -60,7 +61,50 @@ jobs:
             docker push $IMAGE
           done
 
-      - name: Terraform Apply All
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      - name: Terraform Plan
+        if: github.ref == 'refs/heads/main'
         working-directory: ./terraform
-        run: terraform apply -auto-approve -input=false
+        # Зберігаємо план у файл tfplan
+        run: terraform plan -out=tfplan -input=false
+
+      - name: Upload Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: ./terraform/tfplan
+          retention-days: 1
+
+  apply:
+    name: "Manual Approval Apply"
+    needs: plan_and_build
+    runs-on: ubuntu-latest
+    environment: production 
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: terraform init -backend-config="bucket=$BUCKET_TF_STATE"
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ./terraform
+
+      - name: Terraform Apply All
+        working-directory: ./terraform
+        run: terraform apply -auto-approve tfplan
