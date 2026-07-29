@@ -355,6 +355,7 @@ resource "grafana_rule_group" "container_alerts" {
         to   = 0
       }
       datasource_uid = grafana_data_source.cloudwatch.uid
+      model = jsonencode({
         dimensions = {
           ClusterName = var.ecs_cluster_name
         }
