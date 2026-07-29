@@ -13,8 +13,8 @@
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
           "dimensions": {
             "ClusterName": "${ecs_cluster_name}",
-            "TaskDefinitionFamily": "*",
-            "ContainerName": "*"
+            "ContainerName": "*",
+            "AvailabilityZone": "*"
           },
           "metricName": "CpuUtilized",
           "namespace": "ECS/ContainerInsights",
@@ -25,7 +25,7 @@
           "matchExact": true,
           "metricEditorMode": 0,
           "metricQueryType": 0,
-          "alias": "{{TaskDefinitionFamily}} / {{ContainerName}}"
+          "alias": "{{ContainerName}} / {{AvailabilityZone}}"
         }
       ]
     },
@@ -38,8 +38,8 @@
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
           "dimensions": {
             "ClusterName": "${ecs_cluster_name}",
-            "TaskDefinitionFamily": "*",
-            "ContainerName": "*"
+            "ContainerName": "*",
+            "AvailabilityZone": "*"
           },
           "metricName": "MemoryUtilized",
           "namespace": "ECS/ContainerInsights",
@@ -50,7 +50,7 @@
           "matchExact": true,
           "metricEditorMode": 0,
           "metricQueryType": 0,
-          "alias": "{{TaskDefinitionFamily}} / {{ContainerName}}"
+          "alias": "{{ContainerName}} / {{AvailabilityZone}}"
         }
       ]
     }
