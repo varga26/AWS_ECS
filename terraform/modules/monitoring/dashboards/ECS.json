@@ -11,17 +11,14 @@
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}" },
-          "metricName": "CpuUtilized",
-          "namespace": "ECS/ContainerInsights",
-          "period": "60",
+          "id": "queryA",
+          "metricEditorMode": 1,
+          "metricQueryType": 2,
+          "queryMode": "Logs",
           "region": "default",
-          "statistic": "Average",
-          "refId": "A",
-          "matchExact": false,
-          "metricEditorMode": 0,
-          "metricQueryType": 0,
-          "alias": "{{TaskDefinitionFamily}}"
+          "expression": "filter Type=\"Container\"\n| stats avg(CpuUtilized) by bin(1m), ContainerName, TaskId",
+          "logGroupNames": ["/aws/ecs/containerinsights/${ecs_cluster_name}/performance"],
+          "refId": "A"
         }
       ]
     },
@@ -32,17 +29,14 @@
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}" },
-          "metricName": "MemoryUtilized",
-          "namespace": "ECS/ContainerInsights",
-          "period": "60",
+          "id": "queryB",
+          "metricEditorMode": 1,
+          "metricQueryType": 2,
+          "queryMode": "Logs",
           "region": "default",
-          "statistic": "Average",
-          "refId": "A",
-          "matchExact": false,
-          "metricEditorMode": 0,
-          "metricQueryType": 0,
-          "alias": "{{TaskDefinitionFamily}}"
+          "expression": "filter Type=\"Container\"\n| stats avg(MemoryUtilized) by bin(1m), ContainerName, TaskId",
+          "logGroupNames": ["/aws/ecs/containerinsights/${ecs_cluster_name}/performance"],
+          "refId": "A"
         }
       ]
     }
