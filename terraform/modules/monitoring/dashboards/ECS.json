@@ -7,17 +7,26 @@
     {
       "type": "timeseries",
       "title": "CPU Utilized — per Container",
-      "description": "CpuUtilized per container. Dimension group: ClusterName, ServiceName, TaskDefinitionFamily, ContainerName.",
+      "description": "CpuUtilized per container. ServiceName wildcard forces ListMetrics to match only service/container-level metrics.",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*",
+            "TaskDefinitionFamily": "*",
+            "ContainerName": "*"
+          },
+          "metricName": "CpuUtilized",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
           "region": "default",
-          "id": "cpuByContainer",
-          "metricQueryType": 0,
-          "metricEditorMode": 1,
-          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
+          "statistic": "Average",
           "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
           "alias": "{{ContainerName}} / {{ServiceName}}"
         }
       ]
@@ -25,17 +34,26 @@
     {
       "type": "timeseries",
       "title": "CPU Utilized — per Availability Zone",
-      "description": "CpuUtilized per AZ. Dimension group: ClusterName, ServiceName, TaskDefinitionFamily, AvailabilityZone.",
+      "description": "CpuUtilized per AZ. ServiceName wildcard forces ListMetrics to task/AZ-level metrics.",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*",
+            "TaskDefinitionFamily": "*",
+            "AvailabilityZone": "*"
+          },
+          "metricName": "CpuUtilized",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
           "region": "default",
-          "id": "cpuByAZ",
-          "metricQueryType": 0,
-          "metricEditorMode": 1,
-          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName,TaskDefinitionFamily,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
+          "statistic": "Average",
           "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
           "alias": "{{ServiceName}} / {{AvailabilityZone}}"
         }
       ]
@@ -43,17 +61,26 @@
     {
       "type": "timeseries",
       "title": "Memory Utilized — per Container",
-      "description": "MemoryUtilized per container. Dimension group: ClusterName, ServiceName, TaskDefinitionFamily, ContainerName.",
+      "description": "MemoryUtilized per container. ServiceName wildcard forces ListMetrics to match only service/container-level metrics.",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*",
+            "TaskDefinitionFamily": "*",
+            "ContainerName": "*"
+          },
+          "metricName": "MemoryUtilized",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
           "region": "default",
-          "id": "memByContainer",
-          "metricQueryType": 0,
-          "metricEditorMode": 1,
-          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
+          "statistic": "Average",
           "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
           "alias": "{{ContainerName}} / {{ServiceName}}"
         }
       ]
@@ -61,17 +88,26 @@
     {
       "type": "timeseries",
       "title": "Memory Utilized — per Availability Zone",
-      "description": "MemoryUtilized per AZ. Dimension group: ClusterName, ServiceName, TaskDefinitionFamily, AvailabilityZone.",
+      "description": "MemoryUtilized per AZ. ServiceName wildcard forces ListMetrics to task/AZ-level metrics.",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*",
+            "TaskDefinitionFamily": "*",
+            "AvailabilityZone": "*"
+          },
+          "metricName": "MemoryUtilized",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
           "region": "default",
-          "id": "memByAZ",
-          "metricQueryType": 0,
-          "metricEditorMode": 1,
-          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName,TaskDefinitionFamily,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
+          "statistic": "Average",
           "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
           "alias": "{{ServiceName}} / {{AvailabilityZone}}"
         }
       ]
