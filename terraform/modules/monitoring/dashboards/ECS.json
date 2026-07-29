@@ -13,9 +13,8 @@
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
           "region": "default",
-          "namespace": "ECS/ContainerInsights",
+          "metricQueryType": 0,
           "metricEditorMode": 1,
-          "metricQueryType": 1,
           "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
           "refId": "A",
           "alias": "{{ContainerName}} / {{AvailabilityZone}}"
@@ -31,9 +30,8 @@
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
           "region": "default",
-          "namespace": "ECS/ContainerInsights",
+          "metricQueryType": 0,
           "metricEditorMode": 1,
-          "metricQueryType": 1,
           "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
           "refId": "A",
           "alias": "{{ContainerName}} / {{AvailabilityZone}}"
