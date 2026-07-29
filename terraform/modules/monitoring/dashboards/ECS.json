@@ -12,6 +12,7 @@
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
           "expression": "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"CpuUtilized\" ClusterName=\"${ecs_cluster_name}\"', 'Average', 60)",
+          "id": "q1",
           "metricQueryType": 1,
           "period": "60",
           "refId": "A",
@@ -27,6 +28,7 @@
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
           "expression": "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"MemoryUtilized\" ClusterName=\"${ecs_cluster_name}\"', 'Average', 60)",
+          "id": "q2",
           "metricQueryType": 1,
           "period": "60",
           "refId": "A",
