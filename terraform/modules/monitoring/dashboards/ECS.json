@@ -6,55 +6,73 @@
   "panels": [
     {
       "type": "timeseries",
-      "title": "CPU Utilized (per container / AZ)",
-      "description": "CpuUtilized from ECS/ContainerInsights, broken down by ContainerName and AvailabilityZone.",
+      "title": "CPU Utilized — per Container",
+      "description": "CpuUtilized broken down by ContainerName (ECS/ContainerInsights, container-level granularity).",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": {
-            "ClusterName": "${ecs_cluster_name}",
-            "TaskDefinitionFamily": "*",
-            "ContainerName": "*",
-            "AvailabilityZone": "*"
-          },
-          "metricName": "CpuUtilized",
-          "namespace": "ECS/ContainerInsights",
-          "period": "60",
           "region": "default",
-          "statistic": "Average",
-          "refId": "A",
-          "matchExact": false,
-          "metricEditorMode": 0,
+          "id": "cpuByContainer",
           "metricQueryType": 0,
-          "alias": "{{ContainerName}} / {{AvailabilityZone}}"
+          "metricEditorMode": 1,
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
+          "refId": "A",
+          "alias": "{{ContainerName}} ({{TaskDefinitionFamily}})"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Memory Utilized (per container / AZ)",
-      "description": "MemoryUtilized from ECS/ContainerInsights, broken down by ContainerName and AvailabilityZone.",
+      "title": "CPU Utilized — per Availability Zone",
+      "description": "CpuUtilized broken down by AvailabilityZone (ECS/ContainerInsights, task-level granularity).",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": {
-            "ClusterName": "${ecs_cluster_name}",
-            "TaskDefinitionFamily": "*",
-            "ContainerName": "*",
-            "AvailabilityZone": "*"
-          },
-          "metricName": "MemoryUtilized",
-          "namespace": "ECS/ContainerInsights",
-          "period": "60",
           "region": "default",
-          "statistic": "Average",
-          "refId": "A",
-          "matchExact": false,
-          "metricEditorMode": 0,
+          "id": "cpuByAZ",
           "metricQueryType": 0,
-          "alias": "{{ContainerName}} / {{AvailabilityZone}}"
+          "metricEditorMode": 1,
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
+          "refId": "A",
+          "alias": "{{TaskDefinitionFamily}} / {{AvailabilityZone}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Memory Utilized — per Container",
+      "description": "MemoryUtilized broken down by ContainerName (ECS/ContainerInsights, container-level granularity).",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "region": "default",
+          "id": "memByContainer",
+          "metricQueryType": 0,
+          "metricEditorMode": 1,
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
+          "refId": "A",
+          "alias": "{{ContainerName}} ({{TaskDefinitionFamily}})"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Memory Utilized — per Availability Zone",
+      "description": "MemoryUtilized broken down by AvailabilityZone (ECS/ContainerInsights, task-level granularity).",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "region": "default",
+          "id": "memByAZ",
+          "metricQueryType": 0,
+          "metricEditorMode": 1,
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
+          "refId": "A",
+          "alias": "{{TaskDefinitionFamily}} / {{AvailabilityZone}}"
         }
       ]
     }
