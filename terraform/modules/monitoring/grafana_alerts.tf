@@ -303,10 +303,16 @@ resource "grafana_rule_group" "container_alerts" {
       }
       datasource_uid = grafana_data_source.cloudwatch.uid
       model = jsonencode({
-        expression       = "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"CpuUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 300)"
-        id               = "q1"
-        metricQueryType  = 1
+        dimensions = {
+          ClusterName = var.ecs_cluster_name
+        }
+        metricName       = "CpuUtilized"
+        namespace        = "ECS/ContainerInsights"
+        statistic        = "Average"
         period           = "300"
+        matchExact       = false
+        metricQueryType  = 0
+        metricEditorMode = 0
         refId            = "A"
         region           = "default"
       })
@@ -349,11 +355,16 @@ resource "grafana_rule_group" "container_alerts" {
         to   = 0
       }
       datasource_uid = grafana_data_source.cloudwatch.uid
-      model = jsonencode({
-        expression       = "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"MemoryUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 300)"
-        id               = "q2"
-        metricQueryType  = 1
+        dimensions = {
+          ClusterName = var.ecs_cluster_name
+        }
+        metricName       = "MemoryUtilized"
+        namespace        = "ECS/ContainerInsights"
+        statistic        = "Average"
         period           = "300"
+        matchExact       = false
+        metricQueryType  = 0
+        metricEditorMode = 0
         refId            = "A"
         region           = "default"
       })

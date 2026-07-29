@@ -11,12 +11,17 @@
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "expression": "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"CpuUtilized\" ClusterName=\"${ecs_cluster_name}\"', 'Average', 60)",
-          "id": "q1",
-          "metricQueryType": 1,
+          "dimensions": { "ClusterName": "${ecs_cluster_name}" },
+          "metricName": "CpuUtilized",
+          "namespace": "ECS/ContainerInsights",
           "period": "60",
+          "region": "default",
+          "statistic": "Average",
           "refId": "A",
-          "region": "default"
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
+          "alias": "{{TaskDefinitionFamily}}"
         }
       ]
     },
@@ -27,12 +32,17 @@
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "expression": "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"MemoryUtilized\" ClusterName=\"${ecs_cluster_name}\"', 'Average', 60)",
-          "id": "q2",
-          "metricQueryType": 1,
+          "dimensions": { "ClusterName": "${ecs_cluster_name}" },
+          "metricName": "MemoryUtilized",
+          "namespace": "ECS/ContainerInsights",
           "period": "60",
+          "region": "default",
+          "statistic": "Average",
           "refId": "A",
-          "region": "default"
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
+          "alias": "{{TaskDefinitionFamily}}"
         }
       ]
     }
