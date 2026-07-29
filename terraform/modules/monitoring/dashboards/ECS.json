@@ -7,7 +7,7 @@
     {
       "type": "timeseries",
       "title": "CPU Utilized — per Container",
-      "description": "CpuUtilized broken down by ContainerName (ECS/ContainerInsights, container-level granularity).",
+      "description": "CpuUtilized per container. Dimension group: ClusterName, ServiceName, TaskDefinitionFamily, ContainerName.",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
@@ -16,16 +16,16 @@
           "id": "cpuByContainer",
           "metricQueryType": 0,
           "metricEditorMode": 1,
-          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
           "refId": "A",
-          "alias": "{{ContainerName}} ({{TaskDefinitionFamily}})"
+          "alias": "{{ContainerName}} / {{ServiceName}}"
         }
       ]
     },
     {
       "type": "timeseries",
       "title": "CPU Utilized — per Availability Zone",
-      "description": "CpuUtilized broken down by AvailabilityZone (ECS/ContainerInsights, task-level granularity).",
+      "description": "CpuUtilized per AZ. Dimension group: ClusterName, ServiceName, TaskDefinitionFamily, AvailabilityZone.",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
@@ -34,16 +34,16 @@
           "id": "cpuByAZ",
           "metricQueryType": 0,
           "metricEditorMode": 1,
-          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName,TaskDefinitionFamily,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
           "refId": "A",
-          "alias": "{{TaskDefinitionFamily}} / {{AvailabilityZone}}"
+          "alias": "{{ServiceName}} / {{AvailabilityZone}}"
         }
       ]
     },
     {
       "type": "timeseries",
       "title": "Memory Utilized — per Container",
-      "description": "MemoryUtilized broken down by ContainerName (ECS/ContainerInsights, container-level granularity).",
+      "description": "MemoryUtilized per container. Dimension group: ClusterName, ServiceName, TaskDefinitionFamily, ContainerName.",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "targets": [
         {
@@ -52,16 +52,16 @@
           "id": "memByContainer",
           "metricQueryType": 0,
           "metricEditorMode": 1,
-          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
           "refId": "A",
-          "alias": "{{ContainerName}} ({{TaskDefinitionFamily}})"
+          "alias": "{{ContainerName}} / {{ServiceName}}"
         }
       ]
     },
     {
       "type": "timeseries",
       "title": "Memory Utilized — per Availability Zone",
-      "description": "MemoryUtilized broken down by AvailabilityZone (ECS/ContainerInsights, task-level granularity).",
+      "description": "MemoryUtilized per AZ. Dimension group: ClusterName, ServiceName, TaskDefinitionFamily, AvailabilityZone.",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
       "targets": [
         {
@@ -70,9 +70,9 @@
           "id": "memByAZ",
           "metricQueryType": 0,
           "metricEditorMode": 1,
-          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,ServiceName,TaskDefinitionFamily,AvailabilityZone} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
           "refId": "A",
-          "alias": "{{TaskDefinitionFamily}} / {{AvailabilityZone}}"
+          "alias": "{{ServiceName}} / {{AvailabilityZone}}"
         }
       ]
     }
