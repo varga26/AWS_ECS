@@ -15,7 +15,7 @@
             "lineInterpolation": "linear",
             "showPoints": "never"
           },
-          "displayName": "${__field.labels.TaskDefinitionFamily} - ${__field.labels.TaskId}"
+          "displayName": "$${__field.labels.TaskDefinitionFamily} - $${__field.labels.TaskId}"
         },
         "overrides": []
       },
@@ -44,7 +44,7 @@
             "lineInterpolation": "linear",
             "showPoints": "never"
           },
-          "displayName": "${__field.labels.TaskDefinitionFamily} - ${__field.labels.TaskId}"
+          "displayName": "$${__field.labels.TaskDefinitionFamily} - $${__field.labels.TaskId}"
         },
         "overrides": []
       },
