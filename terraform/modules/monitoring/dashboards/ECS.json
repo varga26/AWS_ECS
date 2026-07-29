@@ -23,7 +23,7 @@
           "metricEditorMode": 1,
           "metricQueryType": 2,
           "queryMode": "Logs",
-          "region": "default",і
+          "region": "default",
           "expression": "filter Type=\"Container\"\n| stats avg(CpuUtilized) by bin(1m), ContainerName, TaskId",
           "logGroupNames": [
             "/aws/ecs/containerinsights/${ecs_cluster_name}/performance"
