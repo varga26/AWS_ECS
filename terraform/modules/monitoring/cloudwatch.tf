@@ -15,7 +15,7 @@ module "cw_ecs" {
       statistic           = "Average"
       threshold           = 80
       description         = "High CPU"
-      dimensions          = { ClusterName = var.ecs_cluster_name, ContainerName = "ollama", TaskDefinitionFamily = "ollama" }
+      dimensions          = { ClusterName = var.ecs_cluster_name, TaskDefinitionFamily = "ollama" }
     },
     {
       name                = "[llm]-[test]-[ecs]-[high]-[memory]"
@@ -27,7 +27,7 @@ module "cw_ecs" {
       statistic           = "Average"
       threshold           = 80
       description         = "High memory usage"
-      dimensions          = { ClusterName = var.ecs_cluster_name, ContainerName = "ollama", TaskDefinitionFamily = "ollama" }
+      dimensions          = { ClusterName = var.ecs_cluster_name, TaskDefinitionFamily = "ollama" }
     }
   ]
 
@@ -40,7 +40,7 @@ module "cw_ecs" {
       height = 6
       properties = {
         metrics = [
-          [{ "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"CpuUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 60)", "id": "e1" }]
+          [{ "expression": "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"CpuUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 60)", "id": "e1" }]
         ]
         period  = 60
         stat    = "Average"
@@ -58,7 +58,7 @@ module "cw_ecs" {
       height = 6
       properties = {
         metrics = [
-          [{ "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"MemoryUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 60)", "id": "e1" }]
+          [{ "expression": "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"MemoryUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 60)", "id": "e1" }]
         ]
         period  = 60
         stat    = "Average"

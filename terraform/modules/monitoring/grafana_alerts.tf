@@ -303,7 +303,7 @@ resource "grafana_rule_group" "container_alerts" {
       }
       datasource_uid = grafana_data_source.cloudwatch.uid
       model = jsonencode({
-        expression       = "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"CpuUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 300)"
+        expression       = "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"CpuUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 300)"
         id               = "q1"
         metricQueryType  = 1
         period           = "300"
@@ -350,7 +350,7 @@ resource "grafana_rule_group" "container_alerts" {
       }
       datasource_uid = grafana_data_source.cloudwatch.uid
       model = jsonencode({
-        expression       = "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"MemoryUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 300)"
+        expression       = "SEARCH('Namespace=\"ECS/ContainerInsights\" MetricName=\"MemoryUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 300)"
         id               = "q2"
         metricQueryType  = 1
         period           = "300"
