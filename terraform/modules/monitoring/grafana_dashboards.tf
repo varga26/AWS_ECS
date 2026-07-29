@@ -43,7 +43,7 @@ resource "grafana_dashboard" "aws_infrastructure" {
 
 resource "grafana_dashboard" "hosts" {
   folder = grafana_folder.llm_monitoring.id
-  config_json = templatefile("${path.module}/dashboards/hosts.json", {
+  config_json = templatefile("${path.module}/dashboards/ECS.json", {
     cloudwatch_uid   = grafana_data_source.cloudwatch.uid
     ecs_cluster_name = var.ecs_cluster_name
   })

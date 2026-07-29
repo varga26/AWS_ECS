@@ -1,0 +1,40 @@
+{
+  "title": "ECS Containers",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "CPU Utilization (%)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"CpuUtilized\" ClusterName=\"${ecs_cluster_name}\"', 'Average', 60)",
+          "id": "q1",
+          "metricQueryType": 1,
+          "period": "60",
+          "refId": "A",
+          "region": "default"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Memory Utilization (%)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"MemoryUtilized\" ClusterName=\"${ecs_cluster_name}\"', 'Average', 60)",
+          "id": "q2",
+          "metricQueryType": 1,
+          "period": "60",
+          "refId": "A",
+          "region": "default"
+        }
+      ]
+    }
+  ]
+}

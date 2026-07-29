@@ -40,13 +40,12 @@ module "cw_ecs" {
       height = 6
       properties = {
         metrics = [
-          ["AWS/ECS", "CPUUtilization", "ClusterName", var.ecs_cluster_name, "ServiceName", var.ollama_service_name],
-          ["AWS/ECS", "CPUUtilization", "ClusterName", var.ecs_cluster_name, "ServiceName", var.openwebui_service_name]
+          [{ "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"CpuUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 60)", "id": "e1" }]
         ]
         period  = 60
         stat    = "Average"
         region  = var.aws_region
-        title   = "ECS Services CPU Utilization"
+        title   = "ECS Containers CPU Utilization"
         view    = "timeSeries"
         stacked = false
       }
@@ -59,13 +58,12 @@ module "cw_ecs" {
       height = 6
       properties = {
         metrics = [
-          ["AWS/ECS", "MemoryUtilization", "ClusterName", var.ecs_cluster_name, "ServiceName", var.ollama_service_name],
-          ["AWS/ECS", "MemoryUtilization", "ClusterName", var.ecs_cluster_name, "ServiceName", var.openwebui_service_name]
+          [{ "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"MemoryUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 60)", "id": "e1" }]
         ]
         period  = 60
         stat    = "Average"
         region  = var.aws_region
-        title   = "ECS Services Memory Utilization"
+        title   = "ECS Containers Memory Utilization"
         view    = "timeSeries"
         stacked = false
       }

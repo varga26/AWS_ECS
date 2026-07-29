@@ -395,6 +395,48 @@ resource "grafana_rule_group" "container_alerts" {
       })
     }
   }
+  rule {
+    name           = "[llm]-[test]-[container]-[low]-[count]"
+    condition      = "B"
+    for            = "1m"
+    exec_err_state = "Alerting"
+    no_data_state  = "NoData"
+
+    data {
+      ref_id = "A"
+      relative_time_range {
+        from = 300
+        to   = 0
+      }
+      datasource_uid = grafana_data_source.prometheus.uid
+      model = jsonencode({
+        expr  = "sum(up)"
+        refId = "A"
+      })
+    }
+    data {
+      ref_id = "B"
+      relative_time_range {
+        from = 300
+        to   = 0
+      }
+      datasource_uid = "-100"
+      model = jsonencode({
+        conditions = [
+          {
+            evaluator = { params = [2], type = "lt" }
+            operator  = { type = "and" }
+            query     = { params = ["A"] }
+            reducer   = { params = [], type = "last" }
+            type      = "query"
+          }
+        ]
+        datasource = { type = "__expr__", uid = "-100" }
+        refId      = "B"
+        type       = "classic_conditions"
+      })
+    }
+  }
 }
 
 resource "grafana_rule_group" "llm_alerts" {
