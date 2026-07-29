@@ -9,25 +9,25 @@ module "cw_ecs" {
       name                = "[llm]-[test]-[ecs]-[high]-[cpu]"
       comparison_operator = "GreaterThanThreshold"
       evaluation_periods  = 2
-      metric_name         = "CPUUtilization"
-      namespace           = "AWS/ECS"
+      metric_name         = "CpuUtilized"
+      namespace           = "ECS/ContainerInsights"
       period              = 300
       statistic           = "Average"
       threshold           = 80
       description         = "High CPU"
-      dimensions          = { ClusterName = var.ecs_cluster_name, ServiceName = var.ollama_service_name }
+      dimensions          = { ClusterName = var.ecs_cluster_name, ContainerName = "ollama", TaskDefinitionFamily = "ollama" }
     },
     {
       name                = "[llm]-[test]-[ecs]-[high]-[memory]"
       comparison_operator = "GreaterThanThreshold"
       evaluation_periods  = 2
-      metric_name         = "MemoryUtilization"
-      namespace           = "AWS/ECS"
+      metric_name         = "MemoryUtilized"
+      namespace           = "ECS/ContainerInsights"
       period              = 300
       statistic           = "Average"
       threshold           = 80
       description         = "High memory usage"
-      dimensions          = { ClusterName = var.ecs_cluster_name, ServiceName = var.ollama_service_name }
+      dimensions          = { ClusterName = var.ecs_cluster_name, ContainerName = "ollama", TaskDefinitionFamily = "ollama" }
     }
   ]
 

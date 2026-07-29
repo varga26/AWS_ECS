@@ -303,19 +303,12 @@ resource "grafana_rule_group" "container_alerts" {
       }
       datasource_uid = grafana_data_source.cloudwatch.uid
       model = jsonencode({
-        region     = "default"
-        namespace  = "AWS/ECS"
-        metricName = "CPUUtilization"
-        dimensions = {
-          ClusterName = var.ecs_cluster_name
-          ServiceName = var.ollama_service_name
-        }
-        statistic        = "Average"
+        expression       = "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"CpuUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 300)"
+        id               = "q1"
+        metricQueryType  = 1
         period           = "300"
-        matchExact       = false
-        metricQueryType  = 0
-        metricEditorMode = 0
         refId            = "A"
+        region           = "default"
       })
     }
     data {
@@ -357,19 +350,12 @@ resource "grafana_rule_group" "container_alerts" {
       }
       datasource_uid = grafana_data_source.cloudwatch.uid
       model = jsonencode({
-        region     = "default"
-        namespace  = "AWS/ECS"
-        metricName = "MemoryUtilization"
-        dimensions = {
-          ClusterName = var.ecs_cluster_name
-          ServiceName = var.ollama_service_name
-        }
-        statistic        = "Average"
+        expression       = "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} MetricName=\"MemoryUtilized\" ClusterName=\"${var.ecs_cluster_name}\"', 'Average', 300)"
+        id               = "q2"
+        metricQueryType  = 1
         period           = "300"
-        matchExact       = false
-        metricQueryType  = 0
-        metricEditorMode = 0
         refId            = "A"
+        region           = "default"
       })
     }
     data {
@@ -528,6 +514,10 @@ resource "grafana_contact_point" "email" {
     disable_resolve_message = false
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   depends_on = [null_resource.wait_for_grafana]
 }
 
@@ -542,6 +532,10 @@ resource "grafana_contact_point" "slack" {
     username                = "Grafana Alertmanager"
     icon_emoji              = ":grafana:"
     disable_resolve_message = false
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
   depends_on = [null_resource.wait_for_grafana]
@@ -559,6 +553,10 @@ resource "grafana_contact_point" "pagerduty" {
     group                   = "llm-monitoring"
     summary                 = "{{ template \"llm-alert-title\" . }}"
     disable_resolve_message = false
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
   depends_on = [null_resource.wait_for_grafana]
