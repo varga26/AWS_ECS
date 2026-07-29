@@ -505,7 +505,7 @@ resource "grafana_message_template" "llm_alert" {
 }
 
 resource "grafana_contact_point" "email" {
-  name = "Email"
+  name = "Email-Alerts"
 
   email {
     addresses               = [var.endpoint]
@@ -523,7 +523,7 @@ resource "grafana_contact_point" "email" {
 
 resource "grafana_contact_point" "slack" {
   count = var.slack_webhook_url != "" ? 1 : 0
-  name  = "Slack"
+  name  = "Slack-Alerts"
 
   slack {
     url                     = var.slack_webhook_url
@@ -543,7 +543,7 @@ resource "grafana_contact_point" "slack" {
 
 resource "grafana_contact_point" "pagerduty" {
   count = var.pagerduty_integration_key != "" ? 1 : 0
-  name  = "PagerDuty"
+  name  = "PagerDuty-Alerts"
 
   pagerduty {
     integration_key         = var.pagerduty_integration_key
