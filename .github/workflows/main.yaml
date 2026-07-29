@@ -39,18 +39,27 @@ jobs:
       - name: Terraform Init
         working-directory: ./terraform
         run: terraform init -backend-config="bucket=$BUCKET_TF_STATE"
+
+      - name: Check for Docker changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docker:
+              - 'docker/**'
  
       - name: Terraform Apply ECR
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && steps.filter.outputs.docker == 'true'
         working-directory: ./terraform
         run: terraform apply -target="module.ecr" -auto-approve -input=false
 
       - name: Login to Amazon ECR
+        if: steps.filter.outputs.docker == 'true'
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and Push Docker Images
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && steps.filter.outputs.docker == 'true'
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |

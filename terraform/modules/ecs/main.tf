@@ -2,7 +2,7 @@ resource "aws_ecs_cluster" "main" {
   name = "llm-ecs-cluster"
 
   setting {
-    name = "containerInsight"
+    name = "containerInsights"
     value = "enabled"
   }
 }
