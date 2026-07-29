@@ -8,28 +8,20 @@
       "type": "timeseries",
       "title": "CPU Utilization (%)",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "drawStyle": "line",
-            "lineInterpolation": "linear",
-            "showPoints": "never"
-          },
-          "displayName": "$${__field.labels.TaskDefinitionFamily} - $${__field.labels.TaskId}"
-        },
-        "overrides": []
-      },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "id": "queryA",
-          "metricEditorMode": 1,
-          "metricQueryType": 2,
-          "queryMode": "Logs",
+          "dimensions": { "ClusterName": "${ecs_cluster_name}" },
+          "metricName": "CpuUtilized",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
           "region": "default",
-          "expression": "filter Type=\"Task\"\n| stats avg(CpuUtilized) by bin(1m), TaskDefinitionFamily, TaskId",
-          "logGroupNames": ["/aws/ecs/containerinsights/${ecs_cluster_name}/performance"],
-          "refId": "A"
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
+          "alias": "{{TaskDefinitionFamily}} / {{ContainerName}}"
         }
       ]
     },
@@ -37,28 +29,20 @@
       "type": "timeseries",
       "title": "Memory Utilization (%)",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "drawStyle": "line",
-            "lineInterpolation": "linear",
-            "showPoints": "never"
-          },
-          "displayName": "$${__field.labels.TaskDefinitionFamily} - $${__field.labels.TaskId}"
-        },
-        "overrides": []
-      },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "id": "queryB",
-          "metricEditorMode": 1,
-          "metricQueryType": 2,
-          "queryMode": "Logs",
+          "dimensions": { "ClusterName": "${ecs_cluster_name}" },
+          "metricName": "MemoryUtilized",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
           "region": "default",
-          "expression": "filter Type=\"Task\"\n| stats avg(MemoryUtilized) by bin(1m), TaskDefinitionFamily, TaskId",
-          "logGroupNames": ["/aws/ecs/containerinsights/${ecs_cluster_name}/performance"],
-          "refId": "A"
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
+          "alias": "{{TaskDefinitionFamily}} / {{ContainerName}}"
         }
       ]
     }

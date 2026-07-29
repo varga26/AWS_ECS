@@ -3,7 +3,7 @@ resource "aws_ecs_cluster" "main" {
 
   setting {
     name = "containerInsights"
-    value = "enabled"
+    value = "enhanced"
   }
 }
 
@@ -84,6 +84,7 @@ resource "aws_ecs_service" "ollama" {
   task_definition = aws_ecs_task_definition.ollama.arn
   desired_count        = var.ollama_desired_count
   launch_type          = "FARGATE"
+  force_new_deployment = true
 
 
   network_configuration {
@@ -139,6 +140,7 @@ resource "aws_ecs_service" "openwebui" {
   task_definition = aws_ecs_task_definition.openwebui.arn
   desired_count        = var.openwebui_desired_count
   launch_type          = "FARGATE"
+  force_new_deployment = true
 
   network_configuration {
     subnets         = var.private_subnet_ids
@@ -210,6 +212,7 @@ resource "aws_ecs_service" "prometheus" {
   task_definition = aws_ecs_task_definition.prometheus.arn
   desired_count        = var.prometheus_desired_count
   launch_type          = "FARGATE"
+  force_new_deployment = true
 
 
   network_configuration {
@@ -263,6 +266,7 @@ resource "aws_ecs_service" "grafana" {
   task_definition = aws_ecs_task_definition.grafana.arn
   desired_count        = var.grafana_desired_count
   launch_type          = "FARGATE"
+  force_new_deployment = true
 
   network_configuration {
     subnets         = var.private_subnet_ids
