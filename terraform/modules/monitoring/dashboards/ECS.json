@@ -6,60 +6,42 @@
   "panels": [
     {
       "type": "timeseries",
-      "title": "CPU Utilized — per Task Family (ECS/ContainerInsights)",
-      "description": "ECS/ContainerInsights CpuUtilized. Metrics are published at the {ClusterName, ServiceName, TaskDefinitionFamily} level — this is the finest granularity available for CPU/Memory in ContainerInsights without the CloudWatch agent sidecar.",
+      "title": "CPU Utilized — per Container",
+      "description": "ECS/ContainerInsights CpuUtilized. Correct dimension set: {ClusterName, TaskDefinitionFamily, ContainerName} — no ServiceName (AWS docs confirmed).",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": {
-            "ClusterName": "${ecs_cluster_name}",
-            "ServiceName": "*",
-            "TaskDefinitionFamily": "*"
-          },
-          "metricName": "CpuUtilized",
-          "namespace": "ECS/ContainerInsights",
-          "period": "60",
           "region": "default",
-          "statistic": "Average",
-          "refId": "A",
-          "matchExact": false,
-          "metricEditorMode": 0,
           "metricQueryType": 0,
-          "alias": "{{TaskDefinitionFamily}} ({{ServiceName}})"
+          "metricEditorMode": 1,
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"CpuUtilized\"', 'Average', 60)",
+          "refId": "A",
+          "alias": "{{ContainerName}} / {{TaskDefinitionFamily}}"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Memory Utilized — per Task Family (ECS/ContainerInsights)",
-      "description": "ECS/ContainerInsights MemoryUtilized. Published at {ClusterName, ServiceName, TaskDefinitionFamily} level.",
+      "title": "Memory Utilized — per Container",
+      "description": "ECS/ContainerInsights MemoryUtilized. Correct dimension set: {ClusterName, TaskDefinitionFamily, ContainerName} — no ServiceName (AWS docs confirmed).",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": {
-            "ClusterName": "${ecs_cluster_name}",
-            "ServiceName": "*",
-            "TaskDefinitionFamily": "*"
-          },
-          "metricName": "MemoryUtilized",
-          "namespace": "ECS/ContainerInsights",
-          "period": "60",
           "region": "default",
-          "statistic": "Average",
-          "refId": "A",
-          "matchExact": false,
-          "metricEditorMode": 0,
           "metricQueryType": 0,
-          "alias": "{{TaskDefinitionFamily}} ({{ServiceName}})"
+          "metricEditorMode": 1,
+          "expression": "SEARCH('{ECS/ContainerInsights,ClusterName,TaskDefinitionFamily,ContainerName} ClusterName=\"${ecs_cluster_name}\" MetricName=\"MemoryUtilized\"', 'Average', 60)",
+          "refId": "A",
+          "alias": "{{ContainerName}} / {{TaskDefinitionFamily}}"
         }
       ]
     },
     {
       "type": "stat",
       "title": "Running Task Count — per Service",
-      "description": "Number of running ECS tasks per service (ECS/ContainerInsights).",
+      "description": "ECS/ContainerInsights RunningTaskCount per service. Confirmed working.",
       "gridPos": { "h": 4, "w": 24, "x": 0, "y": 8 },
       "options": {
         "reduceOptions": { "calcs": ["lastNotNull"] },
@@ -90,7 +72,7 @@
     {
       "type": "timeseries",
       "title": "CPU Utilization — per Service (AWS/ECS)",
-      "description": "Standard AWS/ECS CPUUtilization at service level. Confirmed available.",
+      "description": "Standard AWS/ECS CPUUtilization. Confirmed working.",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
       "targets": [
         {
@@ -115,7 +97,7 @@
     {
       "type": "timeseries",
       "title": "Memory Utilization — per Service (AWS/ECS)",
-      "description": "Standard AWS/ECS MemoryUtilization at service level. Confirmed available.",
+      "description": "Standard AWS/ECS MemoryUtilization. Confirmed working.",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
       "targets": [
         {
