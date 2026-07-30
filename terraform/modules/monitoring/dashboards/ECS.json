@@ -9,7 +9,7 @@
         "name": "Cluster",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized, cluster_name)",
+        "query": "label_values(container_cpu_utilized, aws_ecs_cluster_name)",
         "refresh": 1,
         "includeAll": false,
         "multi": false
@@ -18,16 +18,7 @@
         "name": "Service",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized{cluster_name=\"$Cluster\"}, service_name)",
-        "refresh": 1,
-        "includeAll": true,
-        "multi": true
-      },
-      {
-        "name": "AZ",
-        "type": "query",
-        "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized{cluster_name=\"$Cluster\", service_name=~\"$Service\"}, cloud_availability_zone)",
+        "query": "label_values(container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\"}, aws_ecs_task_family)",
         "refresh": 1,
         "includeAll": true,
         "multi": true
@@ -36,7 +27,7 @@
         "name": "Container",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized{cluster_name=\"$Cluster\", service_name=~\"$Service\", cloud_availability_zone=~\"$AZ\"}, container_name)",
+        "query": "label_values(container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\"}, container_name)",
         "includeAll": true,
         "multi": true,
         "refresh": 1
@@ -46,14 +37,14 @@
   "panels": [
     {
       "type": "timeseries",
-      "title": "CPU Usage Rate — per Container / AZ",
-      "description": "Rate of CPU seconds consumed per container, grouped by Availability Zone.",
+      "title": "CPU Usage Rate — per Container",
+      "description": "Rate of CPU seconds consumed per container.",
       "gridPos": { "h": 10, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "container_cpu_utilized{cluster_name=\"$Cluster\", service_name=~\"$Service\", cloud_availability_zone=~\"$AZ\", container_name=~\"$Container\"}",
-          "legendFormat": "{{container_name}} - {{cloud_availability_zone}}",
+          "expr": "container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\", container_name=~\"$Container\"}",
+          "legendFormat": "{{container_name}}",
           "refId": "A"
         }
       ],
@@ -71,14 +62,14 @@
     },
     {
       "type": "timeseries",
-      "title": "Memory Usage — per Container / AZ",
-      "description": "Memory consumed (in bytes) per container, grouped by Availability Zone.",
+      "title": "Memory Usage — per Container",
+      "description": "Memory consumed (in bytes) per container.",
       "gridPos": { "h": 10, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "container_memory_utilized{cluster_name=\"$Cluster\", service_name=~\"$Service\", cloud_availability_zone=~\"$AZ\", container_name=~\"$Container\"}",
-          "legendFormat": "{{container_name}} - {{cloud_availability_zone}}",
+          "expr": "container_memory_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\", container_name=~\"$Container\"}",
+          "legendFormat": "{{container_name}}",
           "refId": "A"
         }
       ],
