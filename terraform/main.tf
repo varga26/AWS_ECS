@@ -48,9 +48,15 @@ module "storage" {
   efs_sg_id  = module.security.efs_sg_id
 }
 
+# Wait for EFS DNS to propagate across all AZs
+resource "time_sleep" "wait_for_efs_dns" {
+  depends_on = [module.storage]
+  create_duration = "3m"
+}
+
 module "ecs" {
   source = "./modules/ecs"
-  depends_on = [module.storage]
+  depends_on = [time_sleep.wait_for_efs_dns]
   vpc_id = module.network.vpc_id
   private_subnet_ids = [module.network.private_subnet_1_az_id, module.network.private_subnet_2_az_id]
   ecs_sg_id = module.security.ecs_sg_id
