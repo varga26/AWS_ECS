@@ -50,6 +50,7 @@ module "storage" {
 
 module "ecs" {
   source = "./modules/ecs"
+  depends_on = [module.storage]
   vpc_id = module.network.vpc_id
   private_subnet_ids = [module.network.private_subnet_1_az_id, module.network.private_subnet_2_az_id]
   ecs_sg_id = module.security.ecs_sg_id

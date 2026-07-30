@@ -299,7 +299,7 @@ resource "aws_ecs_task_definition" "prometheus" {
       "--storage.tsdb.path=/prometheus",
       "--web.console.libraries=/usr/share/prometheus/console_libraries",
       "--web.console.templates=/usr/share/prometheus/consoles",
-      "--web.external-url=/prometheus/"
+      "--web.route-prefix=/prometheus"
     ]
     portMappings = [{
       containerPort = 9090
