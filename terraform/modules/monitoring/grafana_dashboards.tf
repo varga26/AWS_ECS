@@ -23,7 +23,7 @@ resource "grafana_data_source" "cloudwatch" {
 }
 
 resource "grafana_folder" "llm_monitoring" {
-  title      = "LLM Monitoring"
+  title      = "LLM Observability"
   depends_on = [null_resource.wait_for_grafana]
 }
 
