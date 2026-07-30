@@ -2,16 +2,32 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'ecs-services'
+  # Ollama application metrics (LLM token rates, queue size, etc.)
+  - job_name: 'ollama-metrics'
     ecs_sd_configs:
       - region: us-east-1
     relabel_configs:
       - source_labels: [__meta_ecs_cluster]
         action: keep
         regex: llm-ecs-cluster
-      - source_labels: [__meta_ecs_service]
+      - source_labels: [__meta_ecs_container_name]
         action: keep
-        regex: ollama-service
+        regex: ollama-metrics
       - source_labels: [__meta_ecs_ip_address]
         target_label: __address__
         replacement: "${1}:8080"
+
+  # Per-container CPU/memory metrics from ECS task metadata endpoint
+  - job_name: 'ecs-container-metrics'
+    ecs_sd_configs:
+      - region: us-east-1
+    relabel_configs:
+      - source_labels: [__meta_ecs_cluster]
+        action: keep
+        regex: llm-ecs-cluster
+      - source_labels: [__meta_ecs_container_name]
+        action: keep
+        regex: ecs-metrics
+      - source_labels: [__meta_ecs_ip_address]
+        target_label: __address__
+        replacement: "${1}:9091"
