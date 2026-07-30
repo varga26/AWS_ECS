@@ -12,9 +12,10 @@ scrape_configs:
       - source_labels: [__meta_ecs_container_name]
         action: keep
         regex: ollama-metrics
-      - source_labels: [__meta_ecs_ip_address]
+      - source_labels: [__address__]
+        regex: ([^:]+)(?::\d+)?
         target_label: __address__
-        replacement: "${1}:8080"
+        replacement: ${1}:8080
 
   - job_name: 'ecs-container-metrics'
     ecs_sd_configs:
@@ -26,6 +27,7 @@ scrape_configs:
       - source_labels: [__meta_ecs_container_name]
         action: keep
         regex: ecs-metrics
-      - source_labels: [__meta_ecs_ip_address]
+      - source_labels: [__address__]
+        regex: ([^:]+)(?::\d+)?
         target_label: __address__
-        replacement: "${1}:9091"
+        replacement: ${1}:9091
