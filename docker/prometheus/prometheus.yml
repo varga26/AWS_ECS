@@ -6,7 +6,7 @@ scrape_configs:
     ecs_sd_configs:
       - region: us-east-1
     relabel_configs:
-      - source_labels: [__meta_ecs_cluster]
+      - source_labels: [__meta_ecs_cluster_name]
         action: keep
         regex: llm-ecs-cluster
       - source_labels: [__meta_ecs_container_name]
@@ -20,7 +20,7 @@ scrape_configs:
     ecs_sd_configs:
       - region: us-east-1
     relabel_configs:
-      - source_labels: [__meta_ecs_cluster]
+      - source_labels: [__meta_ecs_cluster_name]
         action: keep
         regex: llm-ecs-cluster
       - source_labels: [__meta_ecs_container_name]
