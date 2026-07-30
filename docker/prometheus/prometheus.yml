@@ -7,9 +7,9 @@ scrape_configs:
       - region: us-east-1
         cluster: llm-ecs-cluster
     relabel_configs:
-      - source_labels: [__meta_ecs_container_name]
+      - source_labels: [__meta_ecs_task_group]
         action: keep
-        regex: ollama-metrics
+        regex: service:ollama-service
       - source_labels: [__address__]
         regex: ([^:]+)(?::\d+)?
         target_label: __address__
@@ -20,9 +20,9 @@ scrape_configs:
       - region: us-east-1
         cluster: llm-ecs-cluster
     relabel_configs:
-      - source_labels: [__meta_ecs_container_name]
+      - source_labels: [__meta_ecs_task_group]
         action: keep
-        regex: openwebui-metrics
+        regex: service:openwebui-service
       - source_labels: [__address__]
         regex: ([^:]+)(?::\d+)?
         target_label: __address__
@@ -33,9 +33,6 @@ scrape_configs:
       - region: us-east-1
         cluster: llm-ecs-cluster
     relabel_configs:
-      - source_labels: [__meta_ecs_container_name]
-        action: keep
-        regex: aws-otel-collector
       - source_labels: [__address__]
         regex: ([^:]+)(?::\d+)?
         target_label: __address__
