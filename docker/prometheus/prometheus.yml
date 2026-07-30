@@ -5,10 +5,8 @@ scrape_configs:
   - job_name: 'ollama-metrics'
     ecs_sd_configs:
       - region: us-east-1
+        cluster: llm-ecs-cluster
     relabel_configs:
-      - source_labels: [__meta_ecs_cluster_name]
-        action: keep
-        regex: llm-ecs-cluster
       - source_labels: [__meta_ecs_container_name]
         action: keep
         regex: ollama-metrics
@@ -20,10 +18,8 @@ scrape_configs:
   - job_name: 'openwebui-metrics'
     ecs_sd_configs:
       - region: us-east-1
+        cluster: llm-ecs-cluster
     relabel_configs:
-      - source_labels: [__meta_ecs_cluster_name]
-        action: keep
-        regex: llm-ecs-cluster
       - source_labels: [__meta_ecs_container_name]
         action: keep
         regex: openwebui-metrics
@@ -35,10 +31,8 @@ scrape_configs:
   - job_name: 'ecs-container-metrics'
     ecs_sd_configs:
       - region: us-east-1
+        cluster: llm-ecs-cluster
     relabel_configs:
-      - source_labels: [__meta_ecs_cluster_name]
-        action: keep
-        regex: llm-ecs-cluster
       - source_labels: [__meta_ecs_container_name]
         action: keep
         regex: aws-otel-collector
