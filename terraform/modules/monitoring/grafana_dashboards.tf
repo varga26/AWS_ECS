@@ -45,9 +45,10 @@ resource "grafana_dashboard" "hosts" {
   folder = grafana_folder.llm_monitoring.id
   config_json = templatefile("${path.module}/dashboards/ECS.json", {
     cloudwatch_uid   = grafana_data_source.cloudwatch.uid
+    prometheus_uid   = grafana_data_source.prometheus.uid
     ecs_cluster_name = var.ecs_cluster_name
   })
-  depends_on = [grafana_data_source.cloudwatch]
+  depends_on = [grafana_data_source.cloudwatch, grafana_data_source.prometheus]
 }
 
 resource "grafana_dashboard" "llm_performance" {

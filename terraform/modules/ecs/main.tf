@@ -74,6 +74,20 @@ resource "aws_ecs_task_definition" "ollama" {
           "awslogs-stream-prefix" = "ollama-metrics"
         }
       }
+    },
+    {
+      name      = "ecs-metrics"
+      image     = var.ecs_metrics_image
+      essential = false
+      portMappings = [{ containerPort = 9091, hostPort = 9091, protocol = "tcp" }]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "ecs-metrics"
+        }
+      }
     }
   ])
 }
@@ -129,6 +143,20 @@ resource "aws_ecs_task_definition" "openwebui" {
         "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
         "awslogs-region"        = var.aws_region
         "awslogs-stream-prefix" = "openwebui"
+      }
+    }
+  },
+  {
+    name      = "ecs-metrics"
+    image     = var.ecs_metrics_image
+    essential = false
+    portMappings = [{ containerPort = 9091, hostPort = 9091, protocol = "tcp" }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
+        "awslogs-region"        = var.aws_region
+        "awslogs-stream-prefix" = "ecs-metrics"
       }
     }
   }])
@@ -203,6 +231,20 @@ resource "aws_ecs_task_definition" "prometheus" {
         "awslogs-stream-prefix" = "prometheus"
       }
     }
+  },
+  {
+    name      = "ecs-metrics"
+    image     = var.ecs_metrics_image
+    essential = false
+    portMappings = [{ containerPort = 9091, hostPort = 9091, protocol = "tcp" }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
+        "awslogs-region"        = var.aws_region
+        "awslogs-stream-prefix" = "ecs-metrics"
+      }
+    }
   }])
 }
 
@@ -255,6 +297,20 @@ resource "aws_ecs_task_definition" "grafana" {
         "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
         "awslogs-region"        = var.aws_region
         "awslogs-stream-prefix" = "grafana"
+      }
+    }
+  },
+  {
+    name      = "ecs-metrics"
+    image     = var.ecs_metrics_image
+    essential = false
+    portMappings = [{ containerPort = 9091, hostPort = 9091, protocol = "tcp" }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
+        "awslogs-region"        = var.aws_region
+        "awslogs-stream-prefix" = "ecs-metrics"
       }
     }
   }])
