@@ -1,106 +1,98 @@
 {
-  "title": "ECS Containers",
+  "title": "ECS Containers CPU & Memory (ADOT)",
   "timezone": "browser",
   "schemaVersion": 39,
-  "refresh": "5s",
+  "refresh": "10s",
+  "templating": {
+    "list": [
+      {
+        "name": "Cluster",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+        "query": "label_values(container_cpu_usage_total, ClusterName)",
+        "refresh": 1,
+        "includeAll": false,
+        "multi": false
+      },
+      {
+        "name": "Service",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+        "query": "label_values(container_cpu_usage_total{ClusterName=\"$Cluster\"}, ServiceName)",
+        "refresh": 1,
+        "includeAll": true,
+        "multi": true
+      },
+      {
+        "name": "AZ",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+        "query": "label_values(container_cpu_usage_total{ClusterName=\"$Cluster\"}, aws_availability_zone)",
+        "refresh": 1,
+        "includeAll": true,
+        "multi": true
+      },
+      {
+        "name": "Container",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+        "query": "label_values(container_cpu_usage_total{ClusterName=\"$Cluster\", aws_availability_zone=~\"$AZ\"}, container_name)",
+        "includeAll": true,
+        "multi": true,
+        "refresh": 1
+      }
+    ]
+  },
   "panels": [
     {
       "type": "timeseries",
-      "title": "CPU Utilized — per Container / AZ",
-      "description": "Per-container CPU utilization from ECS task metadata endpoint via Prometheus. Labels: container_name, az, task_family.",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "title": "CPU Usage Rate — per Container / AZ",
+      "description": "Rate of CPU seconds consumed per container, grouped by Availability Zone.",
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "ecs_container_cpu_utilized{cluster=\"${ecs_cluster_name}\"}",
-          "legendFormat": "{{container_name}} / {{az}}",
+          "expr": "rate(container_cpu_usage_total{ClusterName=\"$Cluster\", ServiceName=~\"$Service\", aws_availability_zone=~\"$AZ\", container_name=~\"$Container\"}[5m])",
+          "legendFormat": "{{container_name}} - {{aws_availability_zone}}",
           "refId": "A"
         }
-      ]
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "fillOpacity": 10,
+            "lineWidth": 2
+          }
+        }
+      }
     },
     {
       "type": "timeseries",
-      "title": "Memory Utilized — per Container / AZ",
-      "description": "Per-container memory utilization % from ECS task metadata endpoint via Prometheus.",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "title": "Memory Usage — per Container / AZ",
+      "description": "Memory consumed (in bytes) per container, grouped by Availability Zone.",
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "100 * ecs_container_memory_utilized_bytes{cluster=\"${ecs_cluster_name}\"} / ecs_container_memory_limit_bytes{cluster=\"${ecs_cluster_name}\"}",
-          "legendFormat": "{{container_name}} / {{az}}",
+          "expr": "container_memory_usage{ClusterName=\"$Cluster\", ServiceName=~\"$Service\", aws_availability_zone=~\"$AZ\", container_name=~\"$Container\"}",
+          "legendFormat": "{{container_name}} - {{aws_availability_zone}}",
           "refId": "A"
         }
-      ]
-    },
-    {
-      "type": "stat",
-      "title": "Running Containers — per Container / AZ",
-      "description": "Number of running instances per container per Availability Zone (from Prometheus ecs-metrics sidecar).",
-      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 8 },
-      "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"] },
-        "orientation": "auto",
-        "textMode": "auto",
-        "colorMode": "background"
-      },
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "count by (container_name, az) (ecs_container_cpu_utilized{cluster=\"${ecs_cluster_name}\"})",
-          "legendFormat": "{{container_name}} / {{az}}",
-          "refId": "A"
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "fillOpacity": 10,
+            "lineWidth": 2
+          }
         }
-      ]
-    },
-    {
-      "type": "timeseries",
-      "title": "CPU Utilization — per Service (AWS/ECS)",
-      "description": "Standard AWS/ECS CPUUtilization at service level (confirmed available).",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
-      "targets": [
-        {
-          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": {
-            "ClusterName": "${ecs_cluster_name}",
-            "ServiceName": "*"
-          },
-          "metricName": "CPUUtilization",
-          "namespace": "AWS/ECS",
-          "period": "60",
-          "region": "default",
-          "statistic": "Average",
-          "refId": "A",
-          "matchExact": false,
-          "metricEditorMode": 0,
-          "metricQueryType": 0,
-          "alias": "{{ServiceName}}"
-        }
-      ]
-    },
-    {
-      "type": "timeseries",
-      "title": "Memory Utilization — per Service (AWS/ECS)",
-      "description": "Standard AWS/ECS MemoryUtilization at service level (confirmed available).",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
-      "targets": [
-        {
-          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": {
-            "ClusterName": "${ecs_cluster_name}",
-            "ServiceName": "*"
-          },
-          "metricName": "MemoryUtilization",
-          "namespace": "AWS/ECS",
-          "period": "60",
-          "region": "default",
-          "statistic": "Average",
-          "refId": "A",
-          "matchExact": false,
-          "metricEditorMode": 0,
-          "metricQueryType": 0,
-          "alias": "{{ServiceName}}"
-        }
-      ]
+      }
     }
   ]
 }

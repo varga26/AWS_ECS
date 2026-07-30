@@ -11,6 +11,3 @@ output "grafana_repository_url" {
   value = aws_ecr_repository.grafana.repository_url
 }
 
-output "ecs_metrics_repository_url" {
-  value = aws_ecr_repository.ecs_metrics.repository_url
-}

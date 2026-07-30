@@ -71,7 +71,6 @@ module "ecs" {
   openwebui_image  = "${module.ecr.openwebui_repository_url}:latest"
   prometheus_image = "${module.ecr.prometheus_repository_url}:latest"
   grafana_image    = "${module.ecr.grafana_repository_url}:latest"
-  ecs_metrics_image = "${module.ecr.ecs_metrics_repository_url}:latest"
 
   ollama_cpu              = var.ollama_cpu
   ollama_memory           = var.ollama_memory

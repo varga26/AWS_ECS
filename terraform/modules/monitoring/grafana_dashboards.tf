@@ -58,3 +58,11 @@ resource "grafana_dashboard" "llm_performance" {
   })
   depends_on = [grafana_data_source.prometheus]
 }
+
+resource "grafana_dashboard" "openwebui_usage" {
+  folder = grafana_folder.llm_monitoring.id
+  config_json = templatefile("${path.module}/dashboards/openwebui_usage.json", {
+    prometheus_uid = grafana_data_source.prometheus.uid
+  })
+  depends_on = [grafana_data_source.prometheus]
+}

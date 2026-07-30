@@ -32,11 +32,3 @@ resource "aws_ecr_repository" "grafana" {
   }
 }
 
-resource "aws_ecr_repository" "ecs_metrics" {
-  name                 = "ecs-metrics"
-  force_delete         = true
-  image_tag_mutability = "MUTABLE"
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}

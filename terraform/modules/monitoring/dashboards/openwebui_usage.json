@@ -1,0 +1,60 @@
+{
+  "title": "Open WebUI Usage",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "1m",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Total Users",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+          "expr": "openwebui_users_total",
+          "legendFormat": "Users",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Total Chats",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+          "expr": "openwebui_chats_total",
+          "legendFormat": "Chats",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Total Messages",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+          "expr": "openwebui_messages_total",
+          "legendFormat": "Messages",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Chat Sessions over Time",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+          "expr": "openwebui_chats_total",
+          "legendFormat": "Total Chats",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

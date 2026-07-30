@@ -17,6 +17,21 @@ scrape_configs:
         target_label: __address__
         replacement: ${1}:8080
 
+  - job_name: 'openwebui-metrics'
+    ecs_sd_configs:
+      - region: us-east-1
+    relabel_configs:
+      - source_labels: [__meta_ecs_cluster_name]
+        action: keep
+        regex: llm-ecs-cluster
+      - source_labels: [__meta_ecs_container_name]
+        action: keep
+        regex: openwebui-metrics
+      - source_labels: [__address__]
+        regex: ([^:]+)(?::\d+)?
+        target_label: __address__
+        replacement: ${1}:9090
+
   - job_name: 'ecs-container-metrics'
     ecs_sd_configs:
       - region: us-east-1
@@ -26,8 +41,8 @@ scrape_configs:
         regex: llm-ecs-cluster
       - source_labels: [__meta_ecs_container_name]
         action: keep
-        regex: ecs-metrics
+        regex: aws-otel-collector
       - source_labels: [__address__]
         regex: ([^:]+)(?::\d+)?
         target_label: __address__
-        replacement: ${1}:9091
+        replacement: ${1}:20000

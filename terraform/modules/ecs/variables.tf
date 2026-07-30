@@ -14,7 +14,6 @@ variable "ollama_image" { type = string }
 variable "openwebui_image" { type = string }
 variable "prometheus_image" { type = string }
 variable "grafana_image" { type = string }
-variable "ecs_metrics_image" { type = string }
 variable "ollama_base_url" { type = string }
 
 variable "ollama_cpu" { type = string }

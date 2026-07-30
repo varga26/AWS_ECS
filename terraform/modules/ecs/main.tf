@@ -76,16 +76,49 @@ resource "aws_ecs_task_definition" "ollama" {
       }
     },
     {
-      name      = "ecs-metrics"
-      image     = var.ecs_metrics_image
+      name      = "aws-otel-collector"
+      image     = "public.ecr.aws/aws-observability/aws-otel-collector:latest"
       essential = false
-      portMappings = [{ containerPort = 9091, hostPort = 9091, protocol = "tcp" }]
+      portMappings = [{ containerPort = 20000, hostPort = 20000, protocol = "tcp" }]
+      environment = [
+        { 
+          name = "AOT_CONFIG_CONTENT", 
+          value = yamlencode({
+            receivers = {
+              awsecscontainermetrics = {
+                collection_interval = "20s"
+              }
+            }
+            processors = {
+              resourcedetection = {
+                detectors = ["env", "ecs"]
+                timeout   = "2s"
+                override  = false
+              }
+            }
+            exporters = {
+              prometheus = {
+                endpoint = "0.0.0.0:20000"
+              }
+            }
+            service = {
+              pipelines = {
+                metrics = {
+                  receivers  = ["awsecscontainermetrics"]
+                  processors = ["resourcedetection"]
+                  exporters  = ["prometheus"]
+                }
+              }
+            }
+          })
+        }
+      ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
           "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
           "awslogs-region"        = var.aws_region
-          "awslogs-stream-prefix" = "ecs-metrics"
+          "awslogs-stream-prefix" = "adot"
         }
       }
     }
@@ -147,16 +180,70 @@ resource "aws_ecs_task_definition" "openwebui" {
     }
   },
   {
-    name      = "ecs-metrics"
-    image     = var.ecs_metrics_image
+    name      = "aws-otel-collector"
+    image     = "public.ecr.aws/aws-observability/aws-otel-collector:latest"
     essential = false
-    portMappings = [{ containerPort = 9091, hostPort = 9091, protocol = "tcp" }]
+    portMappings = [{ containerPort = 20000, hostPort = 20000, protocol = "tcp" }]
+    environment = [
+      { 
+        name = "AOT_CONFIG_CONTENT", 
+        value = yamlencode({
+          receivers = {
+            awsecscontainermetrics = {
+              collection_interval = "20s"
+            }
+          }
+          processors = {
+            resourcedetection = {
+              detectors = ["env", "ecs"]
+              timeout   = "2s"
+              override  = false
+            }
+          }
+          exporters = {
+            prometheus = {
+              endpoint = "0.0.0.0:20000"
+            }
+          }
+          service = {
+            pipelines = {
+              metrics = {
+                receivers  = ["awsecscontainermetrics"]
+                processors = ["resourcedetection"]
+                exporters  = ["prometheus"]
+              }
+            }
+          }
+        })
+      }
+    ]
     logConfiguration = {
       logDriver = "awslogs"
       options = {
         "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
         "awslogs-region"        = var.aws_region
-        "awslogs-stream-prefix" = "ecs-metrics"
+        "awslogs-stream-prefix" = "adot"
+      }
+    }
+  },
+  {
+    name      = "openwebui-metrics"
+    image     = "ghcr.io/ncecere/exporter-openwebui:latest"
+    essential = false
+    portMappings = [{ containerPort = 9090, hostPort = 9090, protocol = "tcp" }]
+    environment = [
+      { name = "OPENWEBUI_DB_HOST", value = regex("^postgresql://([^:]+):([^@]+)@([^:]+):(\\d+)/(.+)$", var.database_url)[2] },
+      { name = "OPENWEBUI_DB_PASSWORD", value = regex("^postgresql://([^:]+):([^@]+)@([^:]+):(\\d+)/(.+)$", var.database_url)[1] },
+      { name = "OPENWEBUI_DB_USER", value = regex("^postgresql://([^:]+):([^@]+)@([^:]+):(\\d+)/(.+)$", var.database_url)[0] },
+      { name = "OPENWEBUI_DB_PORT", value = regex("^postgresql://([^:]+):([^@]+)@([^:]+):(\\d+)/(.+)$", var.database_url)[3] },
+      { name = "OPENWEBUI_DB_NAME", value = regex("^postgresql://([^:]+):([^@]+)@([^:]+):(\\d+)/(.+)$", var.database_url)[4] }
+    ]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
+        "awslogs-region"        = var.aws_region
+        "awslogs-stream-prefix" = "openwebui-metrics"
       }
     }
   }])
@@ -233,16 +320,49 @@ resource "aws_ecs_task_definition" "prometheus" {
     }
   },
   {
-    name      = "ecs-metrics"
-    image     = var.ecs_metrics_image
+    name      = "aws-otel-collector"
+    image     = "public.ecr.aws/aws-observability/aws-otel-collector:latest"
     essential = false
-    portMappings = [{ containerPort = 9091, hostPort = 9091, protocol = "tcp" }]
+    portMappings = [{ containerPort = 20000, hostPort = 20000, protocol = "tcp" }]
+    environment = [
+      { 
+        name = "AOT_CONFIG_CONTENT", 
+        value = yamlencode({
+          receivers = {
+            awsecscontainermetrics = {
+              collection_interval = "20s"
+            }
+          }
+          processors = {
+            resourcedetection = {
+              detectors = ["env", "ecs"]
+              timeout   = "2s"
+              override  = false
+            }
+          }
+          exporters = {
+            prometheus = {
+              endpoint = "0.0.0.0:20000"
+            }
+          }
+          service = {
+            pipelines = {
+              metrics = {
+                receivers  = ["awsecscontainermetrics"]
+                processors = ["resourcedetection"]
+                exporters  = ["prometheus"]
+              }
+            }
+          }
+        })
+      }
+    ]
     logConfiguration = {
       logDriver = "awslogs"
       options = {
         "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
         "awslogs-region"        = var.aws_region
-        "awslogs-stream-prefix" = "ecs-metrics"
+        "awslogs-stream-prefix" = "adot"
       }
     }
   }])
@@ -301,16 +421,49 @@ resource "aws_ecs_task_definition" "grafana" {
     }
   },
   {
-    name      = "ecs-metrics"
-    image     = var.ecs_metrics_image
+    name      = "aws-otel-collector"
+    image     = "public.ecr.aws/aws-observability/aws-otel-collector:latest"
     essential = false
-    portMappings = [{ containerPort = 9091, hostPort = 9091, protocol = "tcp" }]
+    portMappings = [{ containerPort = 20000, hostPort = 20000, protocol = "tcp" }]
+    environment = [
+      { 
+        name = "AOT_CONFIG_CONTENT", 
+        value = yamlencode({
+          receivers = {
+            awsecscontainermetrics = {
+              collection_interval = "20s"
+            }
+          }
+          processors = {
+            resourcedetection = {
+              detectors = ["env", "ecs"]
+              timeout   = "2s"
+              override  = false
+            }
+          }
+          exporters = {
+            prometheus = {
+              endpoint = "0.0.0.0:20000"
+            }
+          }
+          service = {
+            pipelines = {
+              metrics = {
+                receivers  = ["awsecscontainermetrics"]
+                processors = ["resourcedetection"]
+                exporters  = ["prometheus"]
+              }
+            }
+          }
+        })
+      }
+    ]
     logConfiguration = {
       logDriver = "awslogs"
       options = {
         "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
         "awslogs-region"        = var.aws_region
-        "awslogs-stream-prefix" = "ecs-metrics"
+        "awslogs-stream-prefix" = "adot"
       }
     }
   }])
