@@ -6,81 +6,53 @@
   "panels": [
     {
       "type": "timeseries",
-      "title": "CPU Utilized — per Container",
-      "description": "ECS/ContainerInsights CpuUtilized. One target per service with ContainerName as the only wildcard — prevents multi-wildcard aggregation.",
+      "title": "CPU Utilized — per Task Family (ECS/ContainerInsights)",
+      "description": "ECS/ContainerInsights CpuUtilized. Metrics are published at the {ClusterName, ServiceName, TaskDefinitionFamily} level — this is the finest granularity available for CPU/Memory in ContainerInsights without the CloudWatch agent sidecar.",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "ollama-service", "TaskDefinitionFamily": "ollama", "ContainerName": "*" },
-          "metricName": "CpuUtilized", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "A", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
-          "alias": "{{ContainerName}}"
-        },
-        {
-          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "openwebui-service", "TaskDefinitionFamily": "openwebui", "ContainerName": "*" },
-          "metricName": "CpuUtilized", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "B", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
-          "alias": "{{ContainerName}}"
-        },
-        {
-          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "prometheus-service", "TaskDefinitionFamily": "prometheus", "ContainerName": "*" },
-          "metricName": "CpuUtilized", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "C", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
-          "alias": "{{ContainerName}}"
-        },
-        {
-          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "grafana-service", "TaskDefinitionFamily": "grafana", "ContainerName": "*" },
-          "metricName": "CpuUtilized", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "D", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
-          "alias": "{{ContainerName}}"
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*",
+            "TaskDefinitionFamily": "*"
+          },
+          "metricName": "CpuUtilized",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
+          "alias": "{{TaskDefinitionFamily}} ({{ServiceName}})"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Memory Utilized — per Container",
-      "description": "ECS/ContainerInsights MemoryUtilized. One target per service with ContainerName as the only wildcard.",
+      "title": "Memory Utilized — per Task Family (ECS/ContainerInsights)",
+      "description": "ECS/ContainerInsights MemoryUtilized. Published at {ClusterName, ServiceName, TaskDefinitionFamily} level.",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "ollama-service", "TaskDefinitionFamily": "ollama", "ContainerName": "*" },
-          "metricName": "MemoryUtilized", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "A", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
-          "alias": "{{ContainerName}}"
-        },
-        {
-          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "openwebui-service", "TaskDefinitionFamily": "openwebui", "ContainerName": "*" },
-          "metricName": "MemoryUtilized", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "B", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
-          "alias": "{{ContainerName}}"
-        },
-        {
-          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "prometheus-service", "TaskDefinitionFamily": "prometheus", "ContainerName": "*" },
-          "metricName": "MemoryUtilized", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "C", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
-          "alias": "{{ContainerName}}"
-        },
-        {
-          "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "grafana-service", "TaskDefinitionFamily": "grafana", "ContainerName": "*" },
-          "metricName": "MemoryUtilized", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "D", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
-          "alias": "{{ContainerName}}"
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*",
+            "TaskDefinitionFamily": "*"
+          },
+          "metricName": "MemoryUtilized",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
+          "alias": "{{TaskDefinitionFamily}} ({{ServiceName}})"
         }
       ]
     },
@@ -98,10 +70,19 @@
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "*" },
-          "metricName": "RunningTaskCount", "namespace": "ECS/ContainerInsights",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "A", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*"
+          },
+          "metricName": "RunningTaskCount",
+          "namespace": "ECS/ContainerInsights",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
           "alias": "{{ServiceName}}"
         }
       ]
@@ -109,15 +90,24 @@
     {
       "type": "timeseries",
       "title": "CPU Utilization — per Service (AWS/ECS)",
-      "description": "Standard AWS/ECS CPUUtilization at service level. Confirmed available in CloudWatch.",
+      "description": "Standard AWS/ECS CPUUtilization at service level. Confirmed available.",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "*" },
-          "metricName": "CPUUtilization", "namespace": "AWS/ECS",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "A", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*"
+          },
+          "metricName": "CPUUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
           "alias": "{{ServiceName}}"
         }
       ]
@@ -125,15 +115,24 @@
     {
       "type": "timeseries",
       "title": "Memory Utilization — per Service (AWS/ECS)",
-      "description": "Standard AWS/ECS MemoryUtilization at service level. Confirmed available in CloudWatch.",
+      "description": "Standard AWS/ECS MemoryUtilization at service level. Confirmed available.",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
       "targets": [
         {
           "datasource": { "type": "cloudwatch", "uid": "${cloudwatch_uid}" },
-          "dimensions": { "ClusterName": "${ecs_cluster_name}", "ServiceName": "*" },
-          "metricName": "MemoryUtilization", "namespace": "AWS/ECS",
-          "period": "60", "region": "default", "statistic": "Average",
-          "refId": "A", "matchExact": false, "metricEditorMode": 0, "metricQueryType": 0,
+          "dimensions": {
+            "ClusterName": "${ecs_cluster_name}",
+            "ServiceName": "*"
+          },
+          "metricName": "MemoryUtilization",
+          "namespace": "AWS/ECS",
+          "period": "60",
+          "region": "default",
+          "statistic": "Average",
+          "refId": "A",
+          "matchExact": false,
+          "metricEditorMode": 0,
+          "metricQueryType": 0,
           "alias": "{{ServiceName}}"
         }
       ]
