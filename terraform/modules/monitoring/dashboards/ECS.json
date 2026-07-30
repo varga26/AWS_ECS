@@ -9,7 +9,7 @@
         "name": "Cluster",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized, aws_ecs_cluster_name)",
+        "query": "label_values(container_cpu_utilized, cluster_name)",
         "refresh": 1,
         "includeAll": false,
         "multi": false
@@ -18,7 +18,7 @@
         "name": "Service",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\"}, aws_ecs_service_name)",
+        "query": "label_values(container_cpu_utilized{cluster_name=\"$Cluster\"}, service_name)",
         "refresh": 1,
         "includeAll": true,
         "multi": true
@@ -27,7 +27,7 @@
         "name": "AZ",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_service_name=~\"$Service\"}, aws_availability_zone)",
+        "query": "label_values(container_cpu_utilized{cluster_name=\"$Cluster\", service_name=~\"$Service\"}, cloud_availability_zone)",
         "refresh": 1,
         "includeAll": true,
         "multi": true
@@ -36,7 +36,7 @@
         "name": "Container",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_service_name=~\"$Service\", aws_availability_zone=~\"$AZ\"}, aws_ecs_container_name)",
+        "query": "label_values(container_cpu_utilized{cluster_name=\"$Cluster\", service_name=~\"$Service\", cloud_availability_zone=~\"$AZ\"}, container_name)",
         "includeAll": true,
         "multi": true,
         "refresh": 1
@@ -52,8 +52,8 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_service_name=~\"$Service\", aws_availability_zone=~\"$AZ\", aws_ecs_container_name=~\"$Container\"}",
-          "legendFormat": "{{container_name}} - {{aws_availability_zone}}",
+          "expr": "container_cpu_utilized{cluster_name=\"$Cluster\", service_name=~\"$Service\", cloud_availability_zone=~\"$AZ\", container_name=~\"$Container\"}",
+          "legendFormat": "{{container_name}} - {{cloud_availability_zone}}",
           "refId": "A"
         }
       ],
@@ -77,8 +77,8 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "container_memory_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_service_name=~\"$Service\", aws_availability_zone=~\"$AZ\", aws_ecs_container_name=~\"$Container\"}",
-          "legendFormat": "{{container_name}} - {{aws_availability_zone}}",
+          "expr": "container_memory_utilized{cluster_name=\"$Cluster\", service_name=~\"$Service\", cloud_availability_zone=~\"$AZ\", container_name=~\"$Container\"}",
+          "legendFormat": "{{container_name}} - {{cloud_availability_zone}}",
           "refId": "A"
         }
       ],
