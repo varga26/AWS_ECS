@@ -228,7 +228,7 @@ resource "aws_ecs_task_definition" "openwebui" {
   },
   {
     name      = "openwebui-metrics"
-    image     = "ghcr.io/ncecere/exporter-openwebui:latest"
+    image     = "nicholascecere/exporter-openwebui:latest"
     essential = false
     portMappings = [{ containerPort = 9090, hostPort = 9090, protocol = "tcp" }]
     environment = [
