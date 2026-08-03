@@ -369,7 +369,8 @@ module "sns" {
 }
 
 module "monitoring" {
-  source = "./modules/monitoring"
+  source     = "./modules/monitoring"
+  depends_on = [module.ecs_grafana, module.ecs_prometheus]
 
   aws_region                     = var.aws_region
   sns_topic_arn                  = module.sns.sns_topic_arn

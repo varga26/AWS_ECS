@@ -1,6 +1,29 @@
 resource "null_resource" "wait_for_grafana" {
+  triggers = {
+    alb_dns_name = var.alb_dns_name
+    timestamp    = timestamp()
+  }
+
   provisioner "local-exec" {
-    command = "for i in {1..45}; do if [ \"$(curl -s -o /dev/null -w '%%{http_code}' http://${var.alb_dns_name}/grafana/api/health)\" = \"200\" ]; then echo 'Grafana is ready!'; break; else echo 'Waiting for Grafana...'; sleep 10; fi; done"
+    command = <<-EOT
+      READY=0
+      for i in $(seq 1 60); do
+        STATUS=$(curl -s -o /dev/null -w '%%{http_code}' http://${var.alb_dns_name}/grafana/api/health || true)
+        if [ "$STATUS" = "200" ]; then
+          echo "Grafana is ready!"
+          READY=1
+          break
+        else
+          echo "Waiting for Grafana (attempt $i/60, status: $STATUS)..."
+          sleep 5
+        fi
+      done
+
+      if [ "$READY" -ne 1 ]; then
+        echo "Error: Grafana failed to become ready in time"
+        exit 1
+      fi
+    EOT
   }
 }
 
