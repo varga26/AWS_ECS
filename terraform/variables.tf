@@ -94,8 +94,8 @@ variable "openwebui_cpu" { default = "1024" }
 variable "openwebui_memory" { default = "2048" }
 variable "openwebui_desired_count" { default = 2 }
 
-variable "prometheus_cpu" { default = "1024" }
-variable "prometheus_memory" { default = "2048" }
+variable "prometheus_cpu" { default = "512" }
+variable "prometheus_memory" { default = "1024" }
 variable "prometheus_desired_count" { default = 1 }
 
 variable "grafana_cpu" { default = "512" }
