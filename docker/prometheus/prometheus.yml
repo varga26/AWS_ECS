@@ -10,6 +10,15 @@ scrape_configs:
       - names: ['ollama.ecs.local']
         type: 'A'
         port: 8080
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '^10\.0\.0\.([0-9]|[12][0-9]|3[01])(?::\d+)?$'
+        target_label: cloud_availability_zone
+        replacement: 'us-east-1a'
+      - source_labels: [__address__]
+        regex: '^10\.0\.0\.(3[2-9]|[45][0-9]|6[0-3])(?::\d+)?$'
+        target_label: cloud_availability_zone
+        replacement: 'us-east-1b'
 
   # Scrape OpenWebUI metrics exporter
   - job_name: 'openwebui-metrics'
@@ -18,6 +27,15 @@ scrape_configs:
       - names: ['openwebui.ecs.local']
         type: 'A'
         port: 9090
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '^10\.0\.0\.([0-9]|[12][0-9]|3[01])(?::\d+)?$'
+        target_label: cloud_availability_zone
+        replacement: 'us-east-1a'
+      - source_labels: [__address__]
+        regex: '^10\.0\.0\.(3[2-9]|[45][0-9]|6[0-3])(?::\d+)?$'
+        target_label: cloud_availability_zone
+        replacement: 'us-east-1b'
 
   # Scrape Prometheus itself
   - job_name: 'prometheus'
@@ -26,6 +44,15 @@ scrape_configs:
       - names: ['prometheus.ecs.local']
         type: 'A'
         port: 9090
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '^10\.0\.0\.([0-9]|[12][0-9]|3[01])(?::\d+)?$'
+        target_label: cloud_availability_zone
+        replacement: 'us-east-1a'
+      - source_labels: [__address__]
+        regex: '^10\.0\.0\.(3[2-9]|[45][0-9]|6[0-3])(?::\d+)?$'
+        target_label: cloud_availability_zone
+        replacement: 'us-east-1b'
 
   # Scrape ADOT (AWS OTel Collector) ECS metrics
   - job_name: 'ecs-metrics'
@@ -38,3 +65,13 @@ scrape_configs:
           - 'grafana.ecs.local'
         type: 'A'
         port: 20000
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '^10\.0\.0\.([0-9]|[12][0-9]|3[01])(?::\d+)?$'
+        target_label: cloud_availability_zone
+        replacement: 'us-east-1a'
+      - source_labels: [__address__]
+        regex: '^10\.0\.0\.(3[2-9]|[45][0-9]|6[0-3])(?::\d+)?$'
+        target_label: cloud_availability_zone
+        replacement: 'us-east-1b'
+
