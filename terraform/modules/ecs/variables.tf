@@ -93,6 +93,12 @@ variable "container_port" {
   default     = null
 }
 
+variable "enable_service_discovery" {
+  description = "Enable AWS Cloud Map Service Discovery registration"
+  type        = bool
+  default     = true
+}
+
 variable "service_discovery_namespace_id" {
   description = "Service discovery private DNS namespace ID (optional)"
   type        = string

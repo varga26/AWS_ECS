@@ -47,7 +47,7 @@ resource "aws_ecs_service" "this" {
   }
 
   dynamic "load_balancer" {
-    for_each = var.target_group_arn != null && var.target_group_arn != "" ? [1] : []
+    for_each = var.target_group_arn != null ? [1] : []
     content {
       target_group_arn = var.target_group_arn
       container_name   = var.container_name != null ? var.container_name : var.family
@@ -56,7 +56,7 @@ resource "aws_ecs_service" "this" {
   }
 
   dynamic "service_registries" {
-    for_each = var.service_discovery_namespace_id != null && var.service_discovery_namespace_id != "" ? [1] : []
+    for_each = var.enable_service_discovery ? [1] : []
     content {
       registry_arn = aws_service_discovery_service.this[0].arn
     }
@@ -64,7 +64,7 @@ resource "aws_ecs_service" "this" {
 }
 
 resource "aws_service_discovery_service" "this" {
-  count = var.service_discovery_namespace_id != null && var.service_discovery_namespace_id != "" ? 1 : 0
+  count = var.enable_service_discovery ? 1 : 0
   name  = var.service_discovery_name != null ? var.service_discovery_name : var.family
 
   dns_config {
