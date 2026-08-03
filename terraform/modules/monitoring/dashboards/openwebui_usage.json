@@ -12,7 +12,7 @@
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
           "expr": "openwebui_users_total",
-          "legendFormat": "Users",
+          "legendFormat": "Users [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ]
@@ -25,7 +25,7 @@
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
           "expr": "openwebui_chats_total",
-          "legendFormat": "Chats",
+          "legendFormat": "Chats [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ]
@@ -38,7 +38,7 @@
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
           "expr": "openwebui_messages_total",
-          "legendFormat": "Messages",
+          "legendFormat": "Messages [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ]
@@ -51,7 +51,7 @@
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
           "expr": "increase(openwebui_chats_total[$__rate_interval])",
-          "legendFormat": "New Chats",
+          "legendFormat": "New Chats [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ]

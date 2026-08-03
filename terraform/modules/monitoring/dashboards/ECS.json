@@ -9,7 +9,7 @@
         "name": "Cluster",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized, aws_ecs_cluster_name)",
+        "query": "label_values(container_cpu_utilized_None, aws_ecs_cluster_name)",
         "refresh": 1,
         "includeAll": false,
         "multi": false
@@ -18,7 +18,7 @@
         "name": "Service",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\"}, aws_ecs_task_family)",
+        "query": "label_values(container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\"}, aws_ecs_task_family)",
         "refresh": 1,
         "includeAll": true,
         "multi": true
@@ -27,7 +27,7 @@
         "name": "Container",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\"}, container_name)",
+        "query": "label_values(container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\"}, container_name)",
         "includeAll": true,
         "multi": true,
         "refresh": 1
@@ -43,8 +43,8 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "container_cpu_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\", container_name=~\"$Container\"}",
-          "legendFormat": "{{container_name}}",
+          "expr": "container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\", container_name=~\"$Container\"}",
+          "legendFormat": "{{aws_ecs_task_family}} / {{container_name}} [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ],
@@ -68,8 +68,8 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "container_memory_utilized{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\", container_name=~\"$Container\"}",
-          "legendFormat": "{{container_name}}",
+          "expr": "container_memory_utilized_MiB{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\", container_name=~\"$Container\"}",
+          "legendFormat": "{{aws_ecs_task_family}} / {{container_name}} [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ],

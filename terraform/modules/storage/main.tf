@@ -20,15 +20,15 @@ resource "aws_efs_access_point" "prometheus_ap" {
   file_system_id = aws_efs_file_system.prometheus_data.id
 
   posix_user {
-    gid = 65534
-    uid = 65534
+    gid = 0
+    uid = 0
   }
 
   root_directory {
     path = "/prometheus"
     creation_info {
-      owner_gid   = 65534
-      owner_uid   = 65534
+      owner_gid   = 0
+      owner_uid   = 0
       permissions = "0755"
     }
   }

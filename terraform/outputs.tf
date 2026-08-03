@@ -76,7 +76,7 @@ output "alb_dns_name" {
 
 output "ecs_cluster_name" {
   description = "Name of ECS Cluster"
-  value       = module.ecs.cluster_name
+  value       = module.ecs_cluster.cluster_name
 }
 
 output "connection_info" {

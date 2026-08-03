@@ -1,43 +1,40 @@
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
+  # Scrape Ollama metrics exporter
   - job_name: 'ollama-metrics'
-    ecs_sd_configs:
-      - region: us-east-1
-        clusters:
-          - llm-ecs-cluster
-    relabel_configs:
-      - source_labels: [__meta_ecs_task_group]
-        action: keep
-        regex: service:ollama-service
-      - source_labels: [__address__]
-        regex: ([^:]+)(?::\d+)?
-        target_label: __address__
-        replacement: ${1}:8080
+    metrics_path: /metrics
+    dns_sd_configs:
+      - names: ['ollama.ecs.local']
+        type: 'A'
+        port: 8080
 
+  # Scrape OpenWebUI metrics exporter
   - job_name: 'openwebui-metrics'
-    ecs_sd_configs:
-      - region: us-east-1
-        clusters:
-          - llm-ecs-cluster
-    relabel_configs:
-      - source_labels: [__meta_ecs_task_group]
-        action: keep
-        regex: service:openwebui-service
-      - source_labels: [__address__]
-        regex: ([^:]+)(?::\d+)?
-        target_label: __address__
-        replacement: ${1}:9090
+    metrics_path: /metrics
+    dns_sd_configs:
+      - names: ['openwebui.ecs.local']
+        type: 'A'
+        port: 9090
 
-  - job_name: 'ecs-container-metrics'
-    ecs_sd_configs:
-      - region: us-east-1
-        clusters:
-          - llm-ecs-cluster
-    relabel_configs:
-      - source_labels: [__address__]
-        regex: ([^:]+)(?::\d+)?
-        target_label: __address__
-        replacement: ${1}:20000
-# Trigger rebuild
+  # Scrape Prometheus itself
+  - job_name: 'prometheus'
+    metrics_path: /prometheus/metrics
+    dns_sd_configs:
+      - names: ['prometheus.ecs.local']
+        type: 'A'
+        port: 9090
+
+  # Scrape ADOT (AWS OTel Collector) ECS metrics
+  - job_name: 'ecs-metrics'
+    metrics_path: /metrics
+    dns_sd_configs:
+      - names: 
+          - 'ollama.ecs.local'
+          - 'openwebui.ecs.local'
+          - 'prometheus.ecs.local'
+          - 'grafana.ecs.local'
+        type: 'A'
+        port: 20000

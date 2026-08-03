@@ -20,7 +20,7 @@
             "uid": "${prometheus_uid}"
           },
           "expr": "rate(ollama_generated_tokens_total[1m])",
-          "legendFormat": "{{model}} (Generation)",
+          "legendFormat": "{{model}} (Generation) [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ]
@@ -41,7 +41,7 @@
             "uid": "${prometheus_uid}"
           },
           "expr": "rate(ollama_prompt_tokens_total[1m])",
-          "legendFormat": "{{model}} (Prompt Eval)",
+          "legendFormat": "{{model}} (Prompt Eval) [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ]
@@ -62,7 +62,7 @@
             "uid": "${prometheus_uid}"
           },
           "expr": "ollama_loaded_models",
-          "legendFormat": "Models Loaded",
+          "legendFormat": "Models Loaded [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ]
@@ -83,7 +83,7 @@
             "uid": "${prometheus_uid}"
           },
           "expr": "rate(ollama_request_duration_seconds_sum[1m]) / rate(ollama_request_duration_seconds_count[1m])",
-          "legendFormat": "{{model}} Avg Req Time",
+          "legendFormat": "{{model}} Avg Req Time [{{cloud_availability_zone}}]",
           "refId": "A"
         }
       ]
