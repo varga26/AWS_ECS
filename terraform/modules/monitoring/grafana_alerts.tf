@@ -266,7 +266,7 @@ resource "grafana_rule_group" "elb_alerts" {
       model = jsonencode({
         conditions = [
           {
-            evaluator = { params = [4], type = "lt" }
+            evaluator = { params = [2], type = "lt" }
             operator  = { type = "and" }
             query     = { params = ["A"] }
             reducer   = { params = [], type = "last" }
@@ -306,7 +306,7 @@ resource "grafana_rule_group" "container_alerts" {
         dimensions = {
           ClusterName = var.ecs_cluster_name
         }
-        metricName       = "CpuUtilized"
+        metricName       = "CPUUtilization"
         namespace        = "ECS/ContainerInsights"
         statistic        = "Average"
         period           = "300"
@@ -359,7 +359,7 @@ resource "grafana_rule_group" "container_alerts" {
         dimensions = {
           ClusterName = var.ecs_cluster_name
         }
-        metricName       = "MemoryUtilized"
+        metricName       = "MemoryUtilization"
         namespace        = "ECS/ContainerInsights"
         statistic        = "Average"
         period           = "300"
@@ -590,7 +590,7 @@ resource "grafana_notification_policy" "main" {
     matcher {
       label = "grafana_folder"
       match = "="
-      value = "LLM Monitoring"
+      value = grafana_folder.llm_monitoring.title
     }
     group_wait      = "30s"
     group_interval  = "5m"
@@ -606,7 +606,7 @@ resource "grafana_notification_policy" "main" {
       matcher {
         label = "grafana_folder"
         match = "="
-        value = "LLM Monitoring"
+        value = grafana_folder.llm_monitoring.title
       }
       group_wait      = "30s"
       group_interval  = "5m"
@@ -623,7 +623,7 @@ resource "grafana_notification_policy" "main" {
       matcher {
         label = "grafana_folder"
         match = "="
-        value = "LLM Monitoring"
+        value = grafana_folder.llm_monitoring.title
       }
       group_wait      = "30s"
       group_interval  = "5m"

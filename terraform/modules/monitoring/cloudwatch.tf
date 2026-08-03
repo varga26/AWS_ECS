@@ -9,7 +9,7 @@ module "cw_ecs" {
       name                = "[llm]-[test]-[ecs]-[high]-[cpu]"
       comparison_operator = "GreaterThanThreshold"
       evaluation_periods  = 2
-      metric_name         = "CpuUtilized"
+      metric_name         = "CPUUtilization"
       namespace           = "ECS/ContainerInsights"
       period              = 300
       statistic           = "Average"
@@ -21,7 +21,7 @@ module "cw_ecs" {
       name                = "[llm]-[test]-[ecs]-[high]-[memory]"
       comparison_operator = "GreaterThanThreshold"
       evaluation_periods  = 2
-      metric_name         = "MemoryUtilized"
+      metric_name         = "MemoryUtilization"
       namespace           = "ECS/ContainerInsights"
       period              = 300
       statistic           = "Average"
