@@ -64,12 +64,50 @@ resource "grafana_dashboard" "aws_infrastructure" {
   depends_on = [grafana_data_source.cloudwatch]
 }
 
-resource "grafana_dashboard" "hosts" {
+resource "grafana_dashboard" "hosts_ollama" {
   folder = grafana_folder.llm_monitoring.id
   config_json = templatefile("${path.module}/dashboards/ECS.json", {
     cloudwatch_uid   = grafana_data_source.cloudwatch.uid
     prometheus_uid   = grafana_data_source.prometheus.uid
     ecs_cluster_name = var.ecs_cluster_name
+    service_name     = "ollama"
+    dashboard_title  = "Ollama CPU & Memory"
+  })
+  depends_on = [grafana_data_source.cloudwatch, grafana_data_source.prometheus]
+}
+
+resource "grafana_dashboard" "hosts_openwebui" {
+  folder = grafana_folder.llm_monitoring.id
+  config_json = templatefile("${path.module}/dashboards/ECS.json", {
+    cloudwatch_uid   = grafana_data_source.cloudwatch.uid
+    prometheus_uid   = grafana_data_source.prometheus.uid
+    ecs_cluster_name = var.ecs_cluster_name
+    service_name     = "openwebui"
+    dashboard_title  = "OpenWebUI CPU & Memory"
+  })
+  depends_on = [grafana_data_source.cloudwatch, grafana_data_source.prometheus]
+}
+
+resource "grafana_dashboard" "hosts_prometheus" {
+  folder = grafana_folder.llm_monitoring.id
+  config_json = templatefile("${path.module}/dashboards/ECS.json", {
+    cloudwatch_uid   = grafana_data_source.cloudwatch.uid
+    prometheus_uid   = grafana_data_source.prometheus.uid
+    ecs_cluster_name = var.ecs_cluster_name
+    service_name     = "prometheus"
+    dashboard_title  = "Prometheus CPU & Memory"
+  })
+  depends_on = [grafana_data_source.cloudwatch, grafana_data_source.prometheus]
+}
+
+resource "grafana_dashboard" "hosts_grafana" {
+  folder = grafana_folder.llm_monitoring.id
+  config_json = templatefile("${path.module}/dashboards/ECS.json", {
+    cloudwatch_uid   = grafana_data_source.cloudwatch.uid
+    prometheus_uid   = grafana_data_source.prometheus.uid
+    ecs_cluster_name = var.ecs_cluster_name
+    service_name     = "grafana"
+    dashboard_title  = "Grafana CPU & Memory"
   })
   depends_on = [grafana_data_source.cloudwatch, grafana_data_source.prometheus]
 }

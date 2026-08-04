@@ -1,5 +1,5 @@
 {
-  "title": "ECS Containers CPU & Memory (ADOT)",
+  "title": "${dashboard_title}",
   "timezone": "browser",
   "schemaVersion": 39,
   "refresh": "10s",
@@ -15,19 +15,10 @@
         "multi": false
       },
       {
-        "name": "Service",
-        "type": "query",
-        "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\"}, aws_ecs_task_family)",
-        "refresh": 1,
-        "includeAll": true,
-        "multi": true
-      },
-      {
         "name": "Container",
         "type": "query",
         "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-        "query": "label_values(container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\"}, container_name)",
+        "query": "label_values(container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=\"${service_name}\"}, container_name)",
         "includeAll": true,
         "multi": true,
         "refresh": 1
@@ -43,7 +34,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\", container_name=~\"$Container\"}",
+          "expr": "container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=\"${service_name}\", container_name=~\"$Container\"}",
           "legendFormat": "{{aws_ecs_task_family}} / {{container_name}} [{{cloud_availability_zone}}]",
           "refId": "A"
         }
@@ -68,7 +59,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
-          "expr": "container_memory_utilized_MiB{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=~\"$Service\", container_name=~\"$Container\"}",
+          "expr": "container_memory_utilized_MiB{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=\"${service_name}\", container_name=~\"$Container\"}",
           "legendFormat": "{{aws_ecs_task_family}} / {{container_name}} [{{cloud_availability_zone}}]",
           "refId": "A"
         }

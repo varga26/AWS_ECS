@@ -53,6 +53,26 @@ module "ecs_cluster" {
   vpc_id = module.network.vpc_id
 }
 
+resource "aws_cloudwatch_log_group" "ollama" {
+  name              = "/ecs/ollama"
+  retention_in_days = 14
+}
+
+resource "aws_cloudwatch_log_group" "openwebui" {
+  name              = "/ecs/openwebui"
+  retention_in_days = 14
+}
+
+resource "aws_cloudwatch_log_group" "prometheus" {
+  name              = "/ecs/prometheus"
+  retention_in_days = 14
+}
+
+resource "aws_cloudwatch_log_group" "grafana" {
+  name              = "/ecs/grafana"
+  retention_in_days = 14
+}
+
 locals {
   adot_container = {
     name      = "aws-otel-collector"
@@ -141,7 +161,7 @@ module "ecs_ollama" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = module.ecs_cluster.log_group_name
+          "awslogs-group"         = aws_cloudwatch_log_group.ollama.name
           "awslogs-region"        = var.aws_region
           "awslogs-stream-prefix" = "ollama"
         }
@@ -162,7 +182,7 @@ module "ecs_ollama" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = module.ecs_cluster.log_group_name
+          "awslogs-group"         = aws_cloudwatch_log_group.ollama.name
           "awslogs-region"        = var.aws_region
           "awslogs-stream-prefix" = "ollama-metrics"
         }
@@ -210,7 +230,7 @@ module "ecs_openwebui" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = module.ecs_cluster.log_group_name
+          "awslogs-group"         = aws_cloudwatch_log_group.openwebui.name
           "awslogs-region"        = var.aws_region
           "awslogs-stream-prefix" = "openwebui"
         }
@@ -236,7 +256,7 @@ module "ecs_openwebui" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = module.ecs_cluster.log_group_name
+          "awslogs-group"         = aws_cloudwatch_log_group.openwebui.name
           "awslogs-region"        = var.aws_region
           "awslogs-stream-prefix" = "openwebui-metrics"
         }
@@ -306,7 +326,7 @@ module "ecs_prometheus" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = module.ecs_cluster.log_group_name
+          "awslogs-group"         = aws_cloudwatch_log_group.prometheus.name
           "awslogs-region"        = var.aws_region
           "awslogs-stream-prefix" = "prometheus"
         }
@@ -352,7 +372,7 @@ module "ecs_grafana" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = module.ecs_cluster.log_group_name
+          "awslogs-group"         = aws_cloudwatch_log_group.grafana.name
           "awslogs-region"        = var.aws_region
           "awslogs-stream-prefix" = "grafana"
         }
