@@ -50,6 +50,11 @@ resource "grafana_folder" "llm_monitoring" {
   depends_on = [null_resource.wait_for_grafana]
 }
 
+resource "grafana_folder" "ecs_logs" {
+  title      = "ECS Logs"
+  depends_on = [null_resource.wait_for_grafana]
+}
+
 
 resource "grafana_dashboard" "aws_infrastructure" {
   folder = grafana_folder.llm_monitoring.id
@@ -129,7 +134,7 @@ resource "grafana_dashboard" "openwebui_usage" {
 }
 
 resource "grafana_dashboard" "application_logs" {
-  folder = grafana_folder.llm_monitoring.id
+  folder = grafana_folder.ecs_logs.id
   config_json = templatefile("${path.module}/Logs/container_logs.json", {
     cloudwatch_uid = grafana_data_source.cloudwatch.uid
   })

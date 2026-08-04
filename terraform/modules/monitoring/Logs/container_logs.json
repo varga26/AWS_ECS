@@ -10,7 +10,7 @@
         "type": "custom",
         "query": "ollama,openwebui,prometheus,grafana",
         "refresh": 1,
-        "includeAll": true,
+        "includeAll": false,
         "multi": false
       }
     ]
