@@ -3,7 +3,7 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  # Scrape Ollama metrics exporter
+
   - job_name: 'ollama-metrics'
     metrics_path: /metrics
     dns_sd_configs:
@@ -20,7 +20,6 @@ scrape_configs:
         target_label: cloud_availability_zone
         replacement: 'us-east-1b'
 
-  # Scrape OpenWebUI metrics exporter
   - job_name: 'openwebui-metrics'
     metrics_path: /metrics
     dns_sd_configs:
@@ -37,7 +36,6 @@ scrape_configs:
         target_label: cloud_availability_zone
         replacement: 'us-east-1b'
 
-  # Scrape Prometheus itself
   - job_name: 'prometheus'
     metrics_path: /prometheus/metrics
     dns_sd_configs:
@@ -54,7 +52,6 @@ scrape_configs:
         target_label: cloud_availability_zone
         replacement: 'us-east-1b'
 
-  # Scrape ADOT (AWS OTel Collector) ECS metrics
   - job_name: 'ecs-metrics'
     metrics_path: /metrics
     dns_sd_configs:
