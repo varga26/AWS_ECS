@@ -1,0 +1,55 @@
+{
+  "title": "Centralized Application Logs",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "10s",
+  "templating": {
+    "list": [
+      {
+        "name": "Service",
+        "type": "custom",
+        "query": "ollama,openwebui,prometheus,grafana",
+        "refresh": 1,
+        "includeAll": true,
+        "multi": false
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "logs",
+      "title": "Logs for /ecs/$Service",
+      "gridPos": {
+        "h": 20,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "${cloudwatch_uid}"
+          },
+          "id": "",
+          "region": "default",
+          "logGroupNames": [
+            "/ecs/$Service"
+          ],
+          "queryMode": "Logs",
+          "expression": "fields @timestamp, @message, @logStream\n| sort @timestamp desc\n| limit 1000",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "showLabels": false,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    }
+  ]
+}

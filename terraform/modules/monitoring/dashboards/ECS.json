@@ -8,7 +8,10 @@
       {
         "name": "Cluster",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${prometheus_uid}"
+        },
         "query": "label_values(container_cpu_utilized_None, aws_ecs_cluster_name)",
         "refresh": 1,
         "includeAll": false,
@@ -17,7 +20,10 @@
       {
         "name": "Container",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${prometheus_uid}"
+        },
         "query": "label_values(container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=\"${service_name}\"}, container_name)",
         "includeAll": true,
         "multi": true,
@@ -30,10 +36,18 @@
       "type": "timeseries",
       "title": "CPU Usage Rate — per Container",
       "description": "Rate of CPU seconds consumed per container.",
-      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 0 },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${prometheus_uid}"
+          },
           "expr": "container_cpu_utilized_None{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=\"${service_name}\", container_name=~\"$Container\"}",
           "legendFormat": "{{aws_ecs_task_family}} / {{container_name}} [{{cloud_availability_zone}}]",
           "refId": "A"
@@ -55,10 +69,18 @@
       "type": "timeseries",
       "title": "Memory Usage — per Container",
       "description": "Memory consumed (in bytes) per container.",
-      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 0 },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${prometheus_uid}" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${prometheus_uid}"
+          },
           "expr": "container_memory_utilized_MiB{aws_ecs_cluster_name=\"$Cluster\", aws_ecs_task_family=\"${service_name}\", container_name=~\"$Container\"}",
           "legendFormat": "{{aws_ecs_task_family}} / {{container_name}} [{{cloud_availability_zone}}]",
           "refId": "A"

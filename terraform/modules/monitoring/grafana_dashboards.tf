@@ -127,3 +127,11 @@ resource "grafana_dashboard" "openwebui_usage" {
   })
   depends_on = [grafana_data_source.prometheus]
 }
+
+resource "grafana_dashboard" "application_logs" {
+  folder = grafana_folder.llm_monitoring.id
+  config_json = templatefile("${path.module}/Logs/container_logs.json", {
+    cloudwatch_uid = grafana_data_source.cloudwatch.uid
+  })
+  depends_on = [grafana_data_source.cloudwatch]
+}
